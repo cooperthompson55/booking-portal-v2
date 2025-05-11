@@ -3,27 +3,41 @@ import PropertySizeSelector from './PropertySizeSelector';
 import ServiceSelector from './ServiceSelector';
 import PackageSummary from './PackageSummary';
 import OrderForm from './OrderForm';
-import { usePackageBuilder } from '../hooks/usePackageBuilder';
 import { services } from '../data/services';
 import { CheckCircle2, AlertCircle } from 'lucide-react';
+import { OrderFormData, PropertySize, Service } from '../types';
 
-const PackageBuilder: React.FC = () => {
-  const { 
-    selectedSize, 
-    selectedServices, 
-    totalPrice, 
-    formData,
-    isSubmitting,
-    showSuccess,
-    validationErrors,
-    handleSizeSelect, 
-    handleServiceToggle,
-    handleFormChange,
-    handleAddressChange,
-    handleSubmit,
-    handleReset
-  } = usePackageBuilder();
+interface PackageBuilderProps {
+  selectedSize: PropertySize | null;
+  selectedServices: Map<string, { price: number; count: number }>;
+  totalPrice: number;
+  formData: OrderFormData;
+  isSubmitting: boolean;
+  showSuccess: boolean;
+  validationErrors: string[];
+  handleSizeSelect: (size: PropertySize) => void;
+  handleServiceToggle: (service: Service, count?: number) => void;
+  handleFormChange: (field: keyof Omit<OrderFormData, 'address'>, value: any) => void;
+  handleAddressChange: (field: keyof OrderFormData['address'], value: string) => void;
+  handleSubmit: (e: React.FormEvent) => Promise<void>;
+  handleReset: () => void;
+}
 
+const PackageBuilder: React.FC<PackageBuilderProps> = ({
+  selectedSize,
+  selectedServices,
+  totalPrice,
+  formData,
+  isSubmitting,
+  showSuccess,
+  validationErrors,
+  handleSizeSelect,
+  handleServiceToggle,
+  handleFormChange,
+  handleAddressChange,
+  handleSubmit,
+  handleReset
+}) => {
   if (showSuccess) {
     return (
       <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-sm overflow-hidden my-4">

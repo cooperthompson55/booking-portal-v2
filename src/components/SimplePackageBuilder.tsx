@@ -1,24 +1,29 @@
 import React from 'react';
 import PropertySizeSelector from './PropertySizeSelector';
 import ServiceSelector from './ServiceSelector';
-import { usePackageBuilder } from '../hooks/usePackageBuilder';
 import { services } from '../data/services';
 import { ArrowRight } from 'lucide-react';
+import { PropertySize, Service } from '../types';
 
 interface SimplePackageBuilderProps {
   onShowFullForm: () => void;
+  selectedSize: PropertySize | null;
+  selectedServices: Map<string, { price: number; count: number }>;
+  totalPrice: number;
+  validationErrors: string[];
+  handleSizeSelect: (size: PropertySize) => void;
+  handleServiceToggle: (service: Service, count?: number) => void;
 }
 
-const SimplePackageBuilder: React.FC<SimplePackageBuilderProps> = ({ onShowFullForm }) => {
-  const { 
-    selectedSize, 
-    selectedServices, 
-    totalPrice,
-    validationErrors,
-    handleSizeSelect, 
-    handleServiceToggle,
-  } = usePackageBuilder();
-
+const SimplePackageBuilder: React.FC<SimplePackageBuilderProps> = ({
+  onShowFullForm,
+  selectedSize,
+  selectedServices,
+  totalPrice,
+  validationErrors,
+  handleSizeSelect,
+  handleServiceToggle,
+}) => {
   return (
     <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-sm overflow-hidden my-4">
       <div className="p-4 sm:p-6">

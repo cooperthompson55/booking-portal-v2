@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import PackageBuilder from './components/PackageBuilder';
 import SimplePackageBuilder from './components/SimplePackageBuilder';
+import { usePackageBuilder } from './hooks/usePackageBuilder';
 
 function App() {
-  const [showFullForm, setShowFullForm] = useState(false);
+  const packageBuilderState = usePackageBuilder();
+  const [showFullForm, setShowFullForm] = React.useState(false);
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver(() => {
@@ -24,9 +26,17 @@ function App() {
   return (
     <div className="min-h-screen bg-slate-50 p-3 sm:p-4">
       {showFullForm ? (
-        <PackageBuilder />
+        <PackageBuilder {...packageBuilderState} />
       ) : (
-        <SimplePackageBuilder onShowFullForm={() => setShowFullForm(true)} />
+        <SimplePackageBuilder 
+          onShowFullForm={() => setShowFullForm(true)}
+          selectedSize={packageBuilderState.selectedSize}
+          selectedServices={packageBuilderState.selectedServices}
+          totalPrice={packageBuilderState.totalPrice}
+          validationErrors={packageBuilderState.validationErrors}
+          handleSizeSelect={packageBuilderState.handleSizeSelect}
+          handleServiceToggle={packageBuilderState.handleServiceToggle}
+        />
       )}
     </div>
   );
