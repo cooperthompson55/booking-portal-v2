@@ -97,7 +97,6 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
                   : 'text-gray-500'
               }`}>
                 ${price.toFixed(2)}
-                {selectedSize ? '' : ' (base price)'}
               </span>
               
               {service.id === 'virtualStaging' && (
