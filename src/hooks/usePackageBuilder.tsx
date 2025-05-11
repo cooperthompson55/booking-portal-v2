@@ -64,24 +64,27 @@ export const usePackageBuilder = () => {
     return errors.length === 0;
   };
 
+  const updateServicePrices = useCallback((size: PropertySize, currentServices: Map<string, ServiceCount>) => {
+    const updatedServices = new Map<string, ServiceCount>();
+    
+    currentServices.forEach((serviceData, serviceName) => {
+      const service = services.find(s => s.name === serviceName);
+      if (service && pricingData[size][service.id]) {
+        updatedServices.set(serviceName, {
+          price: pricingData[size][service.id],
+          count: serviceData.count
+        });
+      }
+    });
+    
+    return updatedServices;
+  }, []);
+
   const handleSizeSelect = useCallback((size: PropertySize) => {
     setSelectedSize(size);
     setValidationErrors([]);
-    
-    setSelectedServices(prev => {
-      const newServices = new Map();
-      prev.forEach((serviceData, serviceName) => {
-        const service = services.find(s => s.name === serviceName);
-        if (service && pricingData[size][service.id]) {
-          newServices.set(serviceName, {
-            price: pricingData[size][service.id],
-            count: serviceData.count
-          });
-        }
-      });
-      return newServices;
-    });
-  }, []);
+    setSelectedServices(prev => updateServicePrices(size, prev));
+  }, [updateServicePrices]);
 
   const handleServiceToggle = useCallback((service: Service, count: number = 1) => {
     setValidationErrors([]);
@@ -90,15 +93,9 @@ export const usePackageBuilder = () => {
       
       if (newSelected.has(service.name)) {
         newSelected.delete(service.name);
-      } else {
-        const price = selectedSize 
-          ? pricingData[selectedSize][service.id]
-          : service.price;
-          
-        newSelected.set(service.name, {
-          price,
-          count
-        });
+      } else if (selectedSize) {
+        const price = pricingData[selectedSize][service.id];
+        newSelected.set(service.name, { price, count });
       }
       
       return newSelected;
