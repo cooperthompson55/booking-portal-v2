@@ -1,11 +1,12 @@
 import React from 'react';
 import { OrderFormData } from '../types';
-import { Home, Calendar, MessageSquare, AlertCircle } from 'lucide-react';
+import { Home, Calendar, MessageSquare, AlertCircle, User, Mail, Phone, Building2 } from 'lucide-react';
 
 interface OrderFormProps {
   formData: OrderFormData;
-  onFormChange: (field: keyof Omit<OrderFormData, 'address'>, value: any) => void;
+  onFormChange: (field: keyof Omit<OrderFormData, 'address' | 'agent'>, value: any) => void;
   onAddressChange: (field: keyof OrderFormData['address'], value: string) => void;
+  onAgentChange: (field: keyof OrderFormData['agent'], value: string) => void;
   validationErrors: string[];
 }
 
@@ -13,6 +14,7 @@ const OrderForm: React.FC<OrderFormProps> = ({
   formData,
   onFormChange,
   onAddressChange,
+  onAgentChange,
   validationErrors
 }) => {
   const hasError = (fieldName: string): boolean => {
@@ -29,6 +31,62 @@ const OrderForm: React.FC<OrderFormProps> = ({
 
   return (
     <div className="space-y-6">
+      {/* Agent Information */}
+      <div className="space-y-4">
+        <h3 className="text-lg font-medium text-gray-800 flex items-center gap-2">
+          <User className="w-5 h-5" />
+          Agent Information
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Your Name"
+              value={formData.agent.name}
+              onChange={(e) => onAgentChange('name', e.target.value)}
+              className={inputClassName('name')}
+            />
+            {hasError('name') && (
+              <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-red-500" />
+            )}
+          </div>
+          <div className="relative">
+            <input
+              type="email"
+              placeholder="Email Address"
+              value={formData.agent.email}
+              onChange={(e) => onAgentChange('email', e.target.value)}
+              className={inputClassName('email')}
+            />
+            {hasError('email') && (
+              <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-red-500" />
+            )}
+          </div>
+          <div className="relative">
+            <input
+              type="tel"
+              placeholder="Phone Number"
+              value={formData.agent.phone}
+              onChange={(e) => onAgentChange('phone', e.target.value)}
+              className={inputClassName('phone')}
+            />
+            {hasError('phone') && (
+              <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-red-500" />
+            )}
+          </div>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Company (Optional)"
+              value={formData.agent.company}
+              onChange={(e) => onAgentChange('company', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Property Address */}
       <div className="space-y-4">
         <h3 className="text-lg font-medium text-gray-800 flex items-center gap-2">
           <Home className="w-5 h-5" />

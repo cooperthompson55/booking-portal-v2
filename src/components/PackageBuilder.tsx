@@ -17,8 +17,9 @@ interface PackageBuilderProps {
   validationErrors: string[];
   handleSizeSelect: (size: PropertySize) => void;
   handleServiceToggle: (service: Service, count?: number) => void;
-  handleFormChange: (field: keyof Omit<OrderFormData, 'address'>, value: any) => void;
+  handleFormChange: (field: keyof Omit<OrderFormData, 'address' | 'agent'>, value: any) => void;
   handleAddressChange: (field: keyof OrderFormData['address'], value: string) => void;
+  handleAgentChange: (field: keyof OrderFormData['agent'], value: string) => void;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
   handleReset: () => void;
 }
@@ -35,6 +36,7 @@ const PackageBuilder: React.FC<PackageBuilderProps> = ({
   handleServiceToggle,
   handleFormChange,
   handleAddressChange,
+  handleAgentChange,
   handleSubmit,
   handleReset
 }) => {
@@ -88,6 +90,7 @@ const PackageBuilder: React.FC<PackageBuilderProps> = ({
             formData={formData}
             onFormChange={handleFormChange}
             onAddressChange={handleAddressChange}
+            onAgentChange={handleAgentChange}
             validationErrors={validationErrors}
           />
 

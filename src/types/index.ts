@@ -14,9 +14,17 @@ export interface PropertyAddress {
   zipCode: string;
 }
 
+export interface AgentInfo {
+  name: string;
+  email: string;
+  phone: string;
+  company?: string;
+}
+
 export interface OrderFormData {
   address: PropertyAddress;
   occupancyStatus: 'Vacant' | 'Occupied' | 'Tenanted' | 'Other';
   preferredDate: string;
   propertyNotes: string;
+  agent: AgentInfo;
 }

@@ -15,6 +15,12 @@ const initialFormData: OrderFormData = {
   occupancyStatus: 'Vacant',
   preferredDate: '',
   propertyNotes: '',
+  agent: {
+    name: '',
+    email: '',
+    phone: '',
+    company: ''
+  }
 };
 
 interface ServiceCount {
@@ -55,6 +61,21 @@ export const usePackageBuilder = () => {
 
     if (!formData.preferredDate) {
       errors.push('Please select a preferred date');
+    }
+
+    // Validate agent information
+    if (!formData.agent.name) {
+      errors.push('Please enter your name');
+    }
+
+    if (!formData.agent.email) {
+      errors.push('Please enter your email');
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.agent.email)) {
+      errors.push('Please enter a valid email address');
+    }
+
+    if (!formData.agent.phone) {
+      errors.push('Please enter your phone number');
     }
 
     setValidationErrors(errors);
@@ -110,7 +131,18 @@ export const usePackageBuilder = () => {
     }));
   }, []);
 
-  const handleFormChange = useCallback((field: keyof Omit<OrderFormData, 'address'>, value: any) => {
+  const handleAgentChange = useCallback((field: keyof OrderFormData['agent'], value: string) => {
+    setValidationErrors([]);
+    setFormData(prev => ({
+      ...prev,
+      agent: {
+        ...prev.agent,
+        [field]: value
+      }
+    }));
+  }, []);
+
+  const handleFormChange = useCallback((field: keyof Omit<OrderFormData, 'address' | 'agent'>, value: any) => {
     setValidationErrors([]);
     setFormData(prev => ({
       ...prev,
@@ -155,7 +187,8 @@ export const usePackageBuilder = () => {
         preferred_date: formData.preferredDate,
         property_status: formData.occupancyStatus,
         status: 'pending',
-        user_id: userData?.user?.id || null
+        user_id: userData?.user?.id || null,
+        agent_info: formData.agent
       };
 
       const { error } = await supabase
@@ -197,6 +230,7 @@ export const usePackageBuilder = () => {
     handleServiceToggle,
     handleFormChange,
     handleAddressChange,
+    handleAgentChange,
     handleSubmit,
     handleReset
   };
