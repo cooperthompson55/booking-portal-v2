@@ -4,6 +4,7 @@ export interface DiscountTier {
 }
 
 export const discountTiers: DiscountTier[] = [
+  { threshold: 200, percentage: 2 },
   { threshold: 500, percentage: 5 },
   { threshold: 1000, percentage: 10 },
   { threshold: 2000, percentage: 15 },
