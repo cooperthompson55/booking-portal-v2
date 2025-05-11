@@ -9,13 +9,16 @@ function App() {
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver(() => {
-      window.parent.postMessage(
-        {
-          type: 'resize',
-          height: document.documentElement.scrollHeight,
-        },
-        '*'
-      );
+      // Add a small delay to ensure the DOM has updated
+      setTimeout(() => {
+        window.parent.postMessage(
+          {
+            type: 'resize',
+            height: document.documentElement.scrollHeight,
+          },
+          '*'
+        );
+      }, 100);
     });
 
     resizeObserver.observe(document.body);

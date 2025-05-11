@@ -40,7 +40,7 @@ const PackageBuilder: React.FC<PackageBuilderProps> = ({
 }) => {
   if (showSuccess) {
     return (
-      <div className="w-full bg-white rounded-xl shadow-sm overflow-hidden">
+      <div className="w-full bg-white rounded-xl shadow-sm overflow-hidden min-h-[200px] flex items-center justify-center">
         <div className="p-6 sm:p-8 flex flex-col items-center justify-center text-center">
           <CheckCircle2 className="w-16 h-16 text-green-500 mb-4" />
           <h2 className="text-2xl font-semibold text-primary mb-2">Booking Submitted Successfully!</h2>
