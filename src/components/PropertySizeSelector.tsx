@@ -39,7 +39,7 @@ const PropertySizeSelector: React.FC<PropertySizeSelectorProps> = ({
   return (
     <div className="mb-8">
       <div className="flex items-center mb-3">
-        <Home className={`w-5 h-5 ${hasError ? 'text-red-500' : 'text-blue-600'} mr-2`} />
+        <Home className={`w-5 h-5 ${hasError ? 'text-red-500' : 'text-accent'} mr-2`} />
         <h2 className={`text-lg md:text-xl font-medium ${hasError ? 'text-red-600' : 'text-gray-800'}`}>
           Select Property Size
         </h2>
@@ -58,7 +58,7 @@ const PropertySizeSelector: React.FC<PropertySizeSelectorProps> = ({
               px-3 py-3 text-sm md:text-base rounded-lg 
               transition-all duration-200 ease-in-out 
               ${selectedSize === size
-                ? 'bg-blue-600 text-white shadow-md transform scale-105'
+                ? 'bg-accent text-white shadow-md'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }
             `}
