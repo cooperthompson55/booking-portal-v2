@@ -29,10 +29,9 @@ export const usePackageBuilder = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
-  // Get current price for a service based on selected size
-  const getServicePrice = useCallback((serviceId: string): number => {
-    if (!selectedSize) return 0;
-    return pricingData[selectedSize][serviceId] || 0;
+  const getServicePrice = useCallback((service: Service): number => {
+    if (!selectedSize) return service.price;
+    return pricingData[selectedSize][service.id];
   }, [selectedSize]);
 
   const validateForm = (): boolean => {
@@ -74,7 +73,7 @@ export const usePackageBuilder = () => {
     setSelectedSize(size);
     setValidationErrors([]);
     
-    // Update all service prices when size changes
+    // Update prices for all selected services when size changes
     setSelectedServices(prev => {
       const updated = new Map<string, ServiceCount>();
       prev.forEach((serviceData, serviceName) => {
@@ -91,8 +90,6 @@ export const usePackageBuilder = () => {
   }, []);
 
   const handleServiceToggle = useCallback((service: Service, count: number = 1) => {
-    if (!selectedSize) return; // Prevent adding services without a size selected
-    
     setValidationErrors([]);
     setSelectedServices(prev => {
       const updated = new Map(prev);
@@ -100,9 +97,9 @@ export const usePackageBuilder = () => {
       if (updated.has(service.name)) {
         updated.delete(service.name);
       } else {
-        const currentPrice = pricingData[selectedSize][service.id];
+        const price = selectedSize ? pricingData[selectedSize][service.id] : service.price;
         updated.set(service.name, {
-          price: currentPrice,
+          price,
           count
         });
       }
@@ -149,7 +146,6 @@ export const usePackageBuilder = () => {
     setIsSubmitting(true);
 
     try {
-      // Format services as a simple string for Google Sheets
       const servicesStr = Array.from(selectedServices.entries())
         .map(([name, data]) => `${name} ($${data.price} x ${data.count})`)
         .join(', ');
@@ -179,7 +175,6 @@ export const usePackageBuilder = () => {
         propertyStatus: formData.occupancyStatus
       };
 
-      // Use URLSearchParams to send data in a format that Google Sheets can handle
       const formData = new URLSearchParams();
       Object.entries(payload).forEach(([key, value]) => {
         formData.append(key, value as string);
@@ -197,7 +192,6 @@ export const usePackageBuilder = () => {
         }
       );
 
-      // Wait a bit to ensure the request has time to process
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       setShowSuccess(true);
