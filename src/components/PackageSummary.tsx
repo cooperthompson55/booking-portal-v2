@@ -3,6 +3,7 @@ import { Check, Gift, Package } from 'lucide-react';
 import { PropertySize } from '../types';
 import { discountTiers, getDiscount } from '../data/discounts';
 import { findApplicableBundles, calculateBundleDiscount } from '../data/bundles';
+import { services } from '../data/services';
 
 interface PackageSummaryProps {
   selectedServices: Map<string, { price: number; count: number }>;
