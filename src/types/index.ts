@@ -10,7 +10,7 @@ export interface PropertyAddress {
   street: string;
   street2: string;
   city: string;
-  state: string;
+  province: string;
   zipCode: string;
 }
 

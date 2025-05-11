@@ -70,12 +70,12 @@ const OrderForm: React.FC<OrderFormProps> = ({
             <div className="relative">
               <input
                 type="text"
-                placeholder="State"
-                value={formData.address.state}
-                onChange={(e) => onAddressChange('state', e.target.value)}
-                className={inputClassName('state')}
+                placeholder="Province"
+                value={formData.address.province}
+                onChange={(e) => onAddressChange('province', e.target.value)}
+                className={inputClassName('province')}
               />
-              {hasError('state') && (
+              {hasError('province') && (
                 <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-red-500" />
               )}
             </div>

@@ -9,7 +9,7 @@ const initialFormData: OrderFormData = {
     street: '',
     street2: '',
     city: '',
-    state: '',
+    province: '',
     zipCode: '',
   },
   occupancyStatus: 'Vacant',
@@ -45,8 +45,8 @@ export const usePackageBuilder = () => {
       errors.push('Please enter the city');
     }
 
-    if (!formData.address.state) {
-      errors.push('Please enter the state');
+    if (!formData.address.province) {
+      errors.push('Please enter the province');
     }
 
     if (!formData.address.zipCode) {
