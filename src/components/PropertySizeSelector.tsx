@@ -32,21 +32,16 @@ const PropertySizeSelector: React.FC<PropertySizeSelectorProps> = ({
     }
   };
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>, size: PropertySize) => {
-    e.preventDefault();
-    onSizeSelect(size);
-  };
-
   const hasError = validationErrors.some(error => 
     error.toLowerCase().includes('property size')
   );
 
   return (
-    <div className={`mb-8 ${hasError ? 'animate-shake' : ''}`}>
+    <div className="mb-8">
       <div className="flex items-center mb-3">
         <Home className={`w-5 h-5 ${hasError ? 'text-red-500' : 'text-blue-600'} mr-2`} />
         <h2 className={`text-lg md:text-xl font-medium ${hasError ? 'text-red-600' : 'text-gray-800'}`}>
-          Select Property Size
+          Select Property Size (Optional)
         </h2>
         {hasError && (
           <AlertCircle className="w-5 h-5 text-red-500 ml-2" />
@@ -58,17 +53,15 @@ const PropertySizeSelector: React.FC<PropertySizeSelectorProps> = ({
           <button
             key={size}
             type="button"
+            onClick={() => onSizeSelect(size)}
             className={`
               px-3 py-3 text-sm md:text-base rounded-lg 
               transition-all duration-200 ease-in-out 
               ${selectedSize === size
                 ? 'bg-blue-600 text-white shadow-md transform scale-105'
-                : hasError
-                  ? 'bg-red-50 text-red-700 border-2 border-red-300 hover:bg-red-100'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }
             `}
-            onClick={(e) => handleClick(e, size)}
           >
             {getSizeLabel(size)}
           </button>

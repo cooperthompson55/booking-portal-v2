@@ -29,17 +29,8 @@ export const usePackageBuilder = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
-  const getServicePrice = useCallback((service: Service): number => {
-    if (!selectedSize) return service.price;
-    return pricingData[selectedSize][service.id];
-  }, [selectedSize]);
-
   const validateForm = (): boolean => {
     const errors: string[] = [];
-
-    if (!selectedSize) {
-      errors.push('Please select a property size');
-    }
 
     if (selectedServices.size === 0) {
       errors.push('Please select at least one service');
@@ -166,7 +157,7 @@ export const usePackageBuilder = () => {
 
       const payload = {
         timestamp: new Date().toISOString(),
-        propertySize: selectedSize,
+        propertySize: selectedSize || 'Not specified',
         services: servicesStr,
         totalAmount: totalPrice.toFixed(2),
         address: fullAddress,
@@ -224,7 +215,6 @@ export const usePackageBuilder = () => {
     handleFormChange,
     handleAddressChange,
     handleSubmit,
-    handleReset,
-    getServicePrice
+    handleReset
   };
 };
