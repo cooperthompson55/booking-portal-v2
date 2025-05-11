@@ -1,7 +1,8 @@
 import React from 'react';
-import { Check, Gift } from 'lucide-react';
+import { Check, Gift, Package } from 'lucide-react';
 import { PropertySize } from '../types';
 import { discountTiers, getDiscount } from '../data/discounts';
+import { findApplicableBundles, calculateBundleDiscount } from '../data/bundles';
 
 interface PackageSummaryProps {
   selectedServices: Map<string, { price: number; count: number }>;
@@ -16,9 +17,24 @@ const PackageSummary: React.FC<PackageSummaryProps> = ({
 }) => {
   const hasServices = selectedServices.size > 0;
   const subtotal = totalPrice;
-  const appliedDiscount = getDiscount(subtotal);
-  const discountAmount = appliedDiscount ? (subtotal * appliedDiscount.percentage) / 100 : 0;
-  const finalTotal = subtotal - discountAmount;
+  
+  // Calculate volume discount
+  const volumeDiscount = getDiscount(subtotal);
+  const volumeDiscountAmount = volumeDiscount ? (subtotal * volumeDiscount.percentage) / 100 : 0;
+  
+  // Calculate bundle discount
+  const selectedServiceIds = Array.from(selectedServices.keys()).map(name => {
+    const service = services.find(s => s.name === name);
+    return service ? service.id : '';
+  }).filter(Boolean);
+  
+  const applicableBundles = findApplicableBundles(selectedServiceIds);
+  const bundleDiscount = calculateBundleDiscount(applicableBundles);
+  const bundleDiscountAmount = (subtotal * bundleDiscount) / 100;
+  
+  // Calculate total discount and final price
+  const totalDiscountAmount = volumeDiscountAmount + bundleDiscountAmount;
+  const finalTotal = subtotal - totalDiscountAmount;
   
   const formatSize = (size: PropertySize | null): string => {
     if (!size) return 'Not selected';
@@ -70,41 +86,63 @@ const PackageSummary: React.FC<PackageSummaryProps> = ({
         </div>
       )}
 
-      {/* Volume Discount */}
-      {hasServices && (
-        <div className="mb-6 p-4 bg-primary/5 rounded-lg">
-          <div className="flex items-center gap-2 mb-3">
-            <Gift className="w-5 h-5 text-primary" />
-            <h3 className="font-medium text-primary">Volume Discount</h3>
-          </div>
-          
-          {appliedDiscount ? (
-            <div className="text-sm text-primary">
-              {appliedDiscount.percentage}% off orders over ${appliedDiscount.threshold}
-              {nextDiscountTier && (
-                <div className="mt-1 text-gray-600">
-                  Add ${(nextDiscountTier.threshold - subtotal).toFixed(2)} more for {nextDiscountTier.percentage}% off
-                </div>
-              )}
+      {/* Discounts Section */}
+      {hasServices && (applicableBundles.length > 0 || volumeDiscount) && (
+        <div className="mb-6 p-4 bg-primary/5 rounded-lg space-y-4">
+          {/* Volume Discount */}
+          {volumeDiscount && (
+            <div className="flex items-start gap-2">
+              <Gift className="w-5 h-5 text-primary mt-1" />
+              <div>
+                <h3 className="font-medium text-primary">Volume Discount</h3>
+                <p className="text-sm text-primary">
+                  {volumeDiscount.percentage}% off orders over ${volumeDiscount.threshold}
+                </p>
+                {nextDiscountTier && (
+                  <p className="text-sm text-gray-600 mt-1">
+                    Add ${(nextDiscountTier.threshold - subtotal).toFixed(2)} more for {nextDiscountTier.percentage}% off
+                  </p>
+                )}
+              </div>
             </div>
-          ) : nextDiscountTier && (
-            <div className="text-sm text-gray-600">
-              Add ${(nextDiscountTier.threshold - subtotal).toFixed(2)} to get {nextDiscountTier.percentage}% off
+          )}
+
+          {/* Bundle Discount */}
+          {applicableBundles.length > 0 && (
+            <div className="flex items-start gap-2">
+              <Package className="w-5 h-5 text-primary mt-1" />
+              <div>
+                <h3 className="font-medium text-primary">Bundle Savings</h3>
+                <p className="text-sm text-primary">
+                  Extra {bundleDiscount}% off with {applicableBundles[0].name}
+                </p>
+                <p className="text-sm text-gray-600 mt-1">
+                  {applicableBundles[0].description}
+                </p>
+              </div>
             </div>
           )}
         </div>
       )}
       
+      {/* Price Summary */}
       <div className="space-y-2">
         <div className="flex justify-between items-center text-gray-600">
           <span>Subtotal</span>
           <span>${subtotal.toFixed(2)}</span>
         </div>
         
-        {appliedDiscount && (
+        {volumeDiscountAmount > 0 && (
           <div className="flex justify-between items-center text-primary">
-            <span>Discount ({appliedDiscount.percentage}% off)</span>
-            <span>-${discountAmount.toFixed(2)}</span>
+            <span>Volume Discount ({volumeDiscount?.percentage}% off)</span>
+            <span>-${volumeDiscountAmount.toFixed(2)}</span>
+          </div>
+        )}
+
+        {bundleDiscountAmount > 0 && (
+          <div className="flex justify-between items-center text-primary">
+            <span>Bundle Discount ({bundleDiscount}% off)</span>
+            <span>-${bundleDiscountAmount.toFixed(2)}</span>
           </div>
         )}
         
