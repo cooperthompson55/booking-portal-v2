@@ -64,41 +64,43 @@ export const usePackageBuilder = () => {
     return errors.length === 0;
   };
 
-  const updateServicePrices = useCallback((size: PropertySize, currentServices: Map<string, ServiceCount>) => {
-    const updatedServices = new Map<string, ServiceCount>();
-    
-    currentServices.forEach((serviceData, serviceName) => {
-      const service = services.find(s => s.name === serviceName);
-      if (service && pricingData[size][service.id]) {
-        updatedServices.set(serviceName, {
-          price: pricingData[size][service.id],
-          count: serviceData.count
-        });
-      }
-    });
-    
-    return updatedServices;
-  }, []);
-
   const handleSizeSelect = useCallback((size: PropertySize) => {
     setSelectedSize(size);
     setValidationErrors([]);
-    setSelectedServices(prev => updateServicePrices(size, prev));
-  }, [updateServicePrices]);
+    
+    // Update prices for all currently selected services based on new size
+    setSelectedServices(prev => {
+      const updated = new Map<string, ServiceCount>();
+      prev.forEach((serviceData, serviceName) => {
+        const service = services.find(s => s.name === serviceName);
+        if (service) {
+          updated.set(serviceName, {
+            price: pricingData[size][service.id],
+            count: serviceData.count
+          });
+        }
+      });
+      return updated;
+    });
+  }, []);
 
   const handleServiceToggle = useCallback((service: Service, count: number = 1) => {
+    if (!selectedSize) return; // Prevent adding services without a size selected
+    
     setValidationErrors([]);
     setSelectedServices(prev => {
-      const newSelected = new Map(prev);
+      const updated = new Map(prev);
       
-      if (newSelected.has(service.name)) {
-        newSelected.delete(service.name);
-      } else if (selectedSize) {
-        const price = pricingData[selectedSize][service.id];
-        newSelected.set(service.name, { price, count });
+      if (updated.has(service.name)) {
+        updated.delete(service.name);
+      } else {
+        updated.set(service.name, {
+          price: pricingData[selectedSize][service.id],
+          count
+        });
       }
       
-      return newSelected;
+      return updated;
     });
   }, [selectedSize]);
 
