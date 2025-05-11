@@ -32,25 +32,22 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
 
   const handleServiceClick = (service: Service) => {
     if (service.id === 'virtualStaging') {
-      onServiceToggle(service, stagingCount);
+      if (!selectedServices.has(service.name)) {
+        onServiceToggle(service, stagingCount);
+      }
     } else {
       onServiceToggle(service);
     }
   };
 
-  const handleStagingCountChange = (increment: boolean, e: React.MouseEvent) => {
+  const handleStagingCountChange = (increment: boolean, service: Service, e: React.MouseEvent) => {
     e.stopPropagation();
-    setStagingCount(prev => {
-      const newCount = increment ? prev + 1 : Math.max(1, prev - 1);
-      const serviceData = selectedServices.get('Virtual Staging');
-      if (serviceData) {
-        onServiceToggle(
-          services.find(s => s.id === 'virtualStaging')!,
-          newCount
-        );
-      }
-      return newCount;
-    });
+    const newCount = increment ? stagingCount + 1 : Math.max(1, stagingCount - 1);
+    setStagingCount(newCount);
+    
+    if (selectedServices.has(service.name)) {
+      onServiceToggle(service, newCount);
+    }
   };
 
   return (
@@ -105,7 +102,7 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
                 }`}>
                   <button
                     type="button"
-                    onClick={(e) => handleStagingCountChange(false, e)}
+                    onClick={(e) => handleStagingCountChange(false, service, e)}
                     className={`p-1 rounded-full ${
                       isSelected 
                         ? 'hover:bg-blue-500'
@@ -114,10 +111,12 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
                   >
                     <Minus className="w-3 h-3" />
                   </button>
-                  <span className="text-xs font-medium min-w-[12px] text-center">{stagingCount}</span>
+                  <span className="text-xs font-medium min-w-[12px] text-center">
+                    {serviceData?.count || stagingCount}
+                  </span>
                   <button
                     type="button"
-                    onClick={(e) => handleStagingCountChange(true, e)}
+                    onClick={(e) => handleStagingCountChange(true, service, e)}
                     className={`p-1 rounded-full ${
                       isSelected 
                         ? 'hover:bg-blue-500'
