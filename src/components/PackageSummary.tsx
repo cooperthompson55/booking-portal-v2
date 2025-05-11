@@ -85,7 +85,7 @@ const PackageSummary: React.FC<PackageSummaryProps> = ({
               <div>
                 <h3 className="font-semibold text-primary">Volume Discount Applied!</h3>
                 <p className="text-sm text-primary/80">
-                  You're saving ${volumeDiscountAmount.toFixed(2)} ({volumeDiscount.percentage}% off)
+                  {volumeDiscount.percentage}% off your order
                 </p>
               </div>
             </div>
@@ -117,14 +117,7 @@ const PackageSummary: React.FC<PackageSummaryProps> = ({
         
         <div className="flex justify-between items-center border-t border-gray-100 pt-3 text-xl font-bold">
           <span className="text-primary">Total</span>
-          <div className="text-right">
-            <span className="text-primary">${finalTotal.toFixed(2)}</span>
-            {volumeDiscountAmount > 0 && (
-              <div className="text-sm font-medium text-green-500">
-                You save ${volumeDiscountAmount.toFixed(2)}
-              </div>
-            )}
-          </div>
+          <span className="text-primary">${finalTotal.toFixed(2)}</span>
         </div>
       </div>
     </div>
