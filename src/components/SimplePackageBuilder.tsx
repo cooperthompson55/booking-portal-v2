@@ -25,13 +25,13 @@ const SimplePackageBuilder: React.FC<SimplePackageBuilderProps> = ({
   handleServiceToggle,
 }) => {
   return (
-    <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-sm overflow-hidden my-4">
-      <div className="p-4 sm:p-6">
+    <div className="w-full max-w-3xl mx-auto bg-white rounded-lg shadow-sm overflow-hidden my-4">
+      <div className="p-4 sm:p-8">
         <h1 className="text-xl sm:text-2xl font-semibold text-center text-primary mb-6">
           RePhotos Quick Quote
         </h1>
 
-        <div className="space-y-6">
+        <div className="space-y-8">
           <PropertySizeSelector 
             selectedSize={selectedSize} 
             onSizeSelect={handleSizeSelect}

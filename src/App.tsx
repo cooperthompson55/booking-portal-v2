@@ -24,20 +24,22 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 p-3 sm:p-4">
-      {showFullForm ? (
-        <PackageBuilder {...packageBuilderState} />
-      ) : (
-        <SimplePackageBuilder 
-          onShowFullForm={() => setShowFullForm(true)}
-          selectedSize={packageBuilderState.selectedSize}
-          selectedServices={packageBuilderState.selectedServices}
-          totalPrice={packageBuilderState.totalPrice}
-          validationErrors={packageBuilderState.validationErrors}
-          handleSizeSelect={packageBuilderState.handleSizeSelect}
-          handleServiceToggle={packageBuilderState.handleServiceToggle}
-        />
-      )}
+    <div className="min-h-screen bg-slate-50 p-3 sm:p-6">
+      <div className="container mx-auto">
+        {showFullForm ? (
+          <PackageBuilder {...packageBuilderState} />
+        ) : (
+          <SimplePackageBuilder 
+            onShowFullForm={() => setShowFullForm(true)}
+            selectedSize={packageBuilderState.selectedSize}
+            selectedServices={packageBuilderState.selectedServices}
+            totalPrice={packageBuilderState.totalPrice}
+            validationErrors={packageBuilderState.validationErrors}
+            handleSizeSelect={packageBuilderState.handleSizeSelect}
+            handleServiceToggle={packageBuilderState.handleServiceToggle}
+          />
+        )}
+      </div>
     </div>
   );
 }

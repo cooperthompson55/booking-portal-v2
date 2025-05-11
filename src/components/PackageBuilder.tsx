@@ -40,7 +40,7 @@ const PackageBuilder: React.FC<PackageBuilderProps> = ({
 }) => {
   if (showSuccess) {
     return (
-      <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-sm overflow-hidden my-4">
+      <div className="w-full max-w-3xl mx-auto bg-white rounded-lg shadow-sm overflow-hidden my-4">
         <div className="p-4 sm:p-6 flex flex-col items-center justify-center text-center">
           <CheckCircle2 className="w-12 h-12 text-green-500 mb-3" />
           <h2 className="text-xl font-semibold text-primary mb-2">Booking Submitted Successfully!</h2>
@@ -57,8 +57,8 @@ const PackageBuilder: React.FC<PackageBuilderProps> = ({
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-sm overflow-hidden my-4">
-      <div className="p-4 sm:p-6">
+    <div className="w-full max-w-3xl mx-auto bg-white rounded-lg shadow-sm overflow-hidden my-4">
+      <div className="p-4 sm:p-8">
         <h1 className="text-xl sm:text-2xl font-semibold text-center text-primary mb-6">
           RePhotos Booking Request
         </h1>
@@ -77,7 +77,7 @@ const PackageBuilder: React.FC<PackageBuilderProps> = ({
           </div>
         )}
 
-        <form id="bookingForm" onSubmit={handleSubmit} className="space-y-6">
+        <form id="bookingForm" onSubmit={handleSubmit} className="space-y-8">
           <PropertySizeSelector 
             selectedSize={selectedSize} 
             onSizeSelect={handleSizeSelect}
