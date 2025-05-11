@@ -44,8 +44,8 @@ const PackageSummary: React.FC<PackageSummaryProps> = ({
       
       {selectedSize && (
         <div className="flex items-center mb-4 bg-gray-50 p-3 rounded-lg">
-          <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-            <Check className="w-4 h-4 text-blue-600" />
+          <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mr-3">
+            <Check className="w-4 h-4 text-primary" />
           </div>
           <div>
             <p className="text-sm text-gray-500">Property Size</p>
@@ -70,37 +70,30 @@ const PackageSummary: React.FC<PackageSummaryProps> = ({
         </div>
       )}
 
-      {/* Discount Tiers */}
-      <div className="mb-6 p-4 bg-primary/5 rounded-lg">
-        <div className="flex items-center gap-2 mb-3">
-          <Gift className="w-5 h-5 text-primary" />
-          <h3 className="font-medium text-primary">Volume Discounts</h3>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {discountTiers.map((tier) => (
-            <div
-              key={tier.threshold}
-              className={`p-2 rounded-md text-center ${
-                appliedDiscount?.threshold === tier.threshold
-                  ? 'bg-primary text-white'
-                  : subtotal >= tier.threshold
-                  ? 'bg-primary/10 text-primary'
-                  : 'bg-gray-50 text-gray-500'
-              }`}
-            >
-              <div className="text-xs mb-1">Orders over</div>
-              <div className="font-semibold">${tier.threshold}</div>
-              <div className="text-xs">{tier.percentage}% off</div>
-            </div>
-          ))}
-        </div>
-        
-        {nextDiscountTier && (
-          <div className="mt-3 text-sm text-primary">
-            Add ${(nextDiscountTier.threshold - subtotal).toFixed(2)} more to get {nextDiscountTier.percentage}% off!
+      {/* Volume Discount */}
+      {hasServices && (
+        <div className="mb-6 p-4 bg-primary/5 rounded-lg">
+          <div className="flex items-center gap-2 mb-3">
+            <Gift className="w-5 h-5 text-primary" />
+            <h3 className="font-medium text-primary">Volume Discount</h3>
           </div>
-        )}
-      </div>
+          
+          {appliedDiscount ? (
+            <div className="text-sm text-primary">
+              {appliedDiscount.percentage}% off orders over ${appliedDiscount.threshold}
+              {nextDiscountTier && (
+                <div className="mt-1 text-gray-600">
+                  Add ${(nextDiscountTier.threshold - subtotal).toFixed(2)} more for {nextDiscountTier.percentage}% off
+                </div>
+              )}
+            </div>
+          ) : nextDiscountTier && (
+            <div className="text-sm text-gray-600">
+              Add ${(nextDiscountTier.threshold - subtotal).toFixed(2)} to get {nextDiscountTier.percentage}% off
+            </div>
+          )}
+        </div>
+      )}
       
       <div className="space-y-2">
         <div className="flex justify-between items-center text-gray-600">
