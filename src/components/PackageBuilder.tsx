@@ -43,11 +43,11 @@ const PackageBuilder: React.FC<PackageBuilderProps> = ({
       <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-sm overflow-hidden my-4">
         <div className="p-4 sm:p-6 flex flex-col items-center justify-center text-center">
           <CheckCircle2 className="w-12 h-12 text-green-500 mb-3" />
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">Booking Submitted Successfully!</h2>
+          <h2 className="text-xl font-semibold text-primary mb-2">Booking Submitted Successfully!</h2>
           <p className="text-gray-600 mb-4">Thank you for your booking request. We'll be in touch shortly.</p>
           <button
             onClick={handleReset}
-            className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors text-sm"
+            className="px-5 py-2 bg-primary hover:bg-primary-light text-white rounded-md transition-colors text-sm"
           >
             Submit Another Booking
           </button>
@@ -59,7 +59,7 @@ const PackageBuilder: React.FC<PackageBuilderProps> = ({
   return (
     <div className="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-sm overflow-hidden my-4">
       <div className="p-4 sm:p-6">
-        <h1 className="text-xl sm:text-2xl font-semibold text-center text-blue-600 mb-6">
+        <h1 className="text-xl sm:text-2xl font-semibold text-center text-primary mb-6">
           RePhotos Booking Request
         </h1>
         
@@ -112,7 +112,7 @@ const PackageBuilder: React.FC<PackageBuilderProps> = ({
               w-full py-2.5 px-4 rounded-md text-white text-sm font-medium
               transition-all duration-200
               ${!isSubmitting
-                ? 'bg-blue-600 hover:bg-blue-700'
+                ? 'bg-primary hover:bg-primary-light'
                 : 'bg-gray-300 cursor-not-allowed'
               }
             `}
