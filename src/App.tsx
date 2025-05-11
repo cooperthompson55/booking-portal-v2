@@ -1,7 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PackageBuilder from './components/PackageBuilder';
+import SimplePackageBuilder from './components/SimplePackageBuilder';
 
 function App() {
+  const [showFullForm, setShowFullForm] = useState(false);
+
   useEffect(() => {
     const resizeObserver = new ResizeObserver(() => {
       window.parent.postMessage(
@@ -20,7 +23,11 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 p-3 sm:p-4">
-      <PackageBuilder />
+      {showFullForm ? (
+        <PackageBuilder />
+      ) : (
+        <SimplePackageBuilder onShowFullForm={() => setShowFullForm(true)} />
+      )}
     </div>
   );
 }
