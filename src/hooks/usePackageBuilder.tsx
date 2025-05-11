@@ -65,7 +65,6 @@ export const usePackageBuilder = () => {
     setSelectedSize(size);
     setValidationErrors([]);
     
-    // Update prices for all selected services when size changes
     setSelectedServices(prev => {
       const updated = new Map<string, ServiceCount>();
       prev.forEach((serviceData, serviceName) => {
@@ -138,7 +137,6 @@ export const usePackageBuilder = () => {
     setIsSubmitting(true);
 
     try {
-      // Convert services to JSONB format
       const servicesData = Array.from(selectedServices.entries()).map(([name, data]) => ({
         name,
         price: data.price,
@@ -146,20 +144,22 @@ export const usePackageBuilder = () => {
         total: data.price * data.count
       }));
 
-      const { error } = await supabase.from('bookings').insert([{
-        property_size: selectedSize || 'Not specified',
-        services: servicesData,
-        total_amount: totalPrice,
-        address: formData.address,
-        notes: formData.propertyNotes || null,
-        preferred_date: formData.preferredDate,
-        property_status: formData.occupancyStatus,
-        status: 'pending'
-      }]);
+      const { data, error } = await supabase
+        .from('bookings')
+        .insert([{
+          property_size: selectedSize || 'Not specified',
+          services: servicesData,
+          total_amount: totalPrice,
+          address: formData.address,
+          notes: formData.propertyNotes || null,
+          preferred_date: formData.preferredDate,
+          property_status: formData.occupancyStatus,
+          status: 'pending'
+        }])
+        .select();
 
       if (error) {
-        console.error('Supabase error:', error);
-        throw new Error('Failed to submit booking');
+        throw error;
       }
 
       setShowSuccess(true);
