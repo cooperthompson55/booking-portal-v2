@@ -1,14 +1,17 @@
 /*
-  # Update bookings table and policies
+  # Update bookings table schema
 
   1. Changes
-    - Safely create bookings table if it doesn't exist
-    - Add RLS policies for anonymous inserts and authenticated reads
-  
+    - Update services column to JSONB type
+    - Update address column to JSONB type
+    - Add user_id column with foreign key reference
+    - Add status column with default value
+    - Update policies for user-specific access
+
   2. Security
-    - Enable RLS on bookings table
-    - Allow anonymous users to insert bookings
-    - Allow authenticated users to read all bookings
+    - Enable RLS
+    - Add policies for authenticated users to manage their own bookings
+    - Allow anonymous inserts
 */
 
 -- Create table if it doesn't exist
@@ -17,15 +20,16 @@ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_tables WHERE tablename = 'bookings') THEN
     CREATE TABLE bookings (
       id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-      timestamp timestamptz NOT NULL,
+      created_at timestamptz DEFAULT now(),
       property_size text NOT NULL,
-      services text NOT NULL,
-      total_amount numeric NOT NULL,
-      address text NOT NULL,
+      services jsonb NOT NULL,
+      total_amount numeric(10,2) NOT NULL,
+      address jsonb NOT NULL,
       notes text,
       preferred_date date NOT NULL,
       property_status text NOT NULL,
-      created_at timestamptz DEFAULT now()
+      status text DEFAULT 'pending',
+      user_id uuid REFERENCES users(id)
     );
   END IF;
 END $$;
@@ -43,11 +47,13 @@ BEGIN
   END IF;
 END $$;
 
--- Drop existing policies if they exist and recreate them
+-- Drop existing policies if they exist
 DO $$ 
 BEGIN 
   DROP POLICY IF EXISTS "Allow anonymous insert" ON bookings;
   DROP POLICY IF EXISTS "Allow authenticated read" ON bookings;
+  DROP POLICY IF EXISTS "Users can create own bookings" ON bookings;
+  DROP POLICY IF EXISTS "Users can read own bookings" ON bookings;
 END $$;
 
 -- Create policies
@@ -62,3 +68,15 @@ CREATE POLICY "Allow authenticated read"
   FOR SELECT
   TO authenticated
   USING (true);
+
+CREATE POLICY "Users can create own bookings"
+  ON bookings
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can read own bookings"
+  ON bookings
+  FOR SELECT
+  TO authenticated
+  USING (auth.uid() = user_id);
