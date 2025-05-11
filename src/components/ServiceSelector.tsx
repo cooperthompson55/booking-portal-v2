@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Service, PropertySize } from '../types';
 import { getServiceIcon } from '../utils/serviceIcons';
-import { Plus, Minus, AlertCircle, PackageOpen } from 'lucide-react';
+import { Plus, Minus, AlertCircle } from 'lucide-react';
 import { pricingData } from '../data/pricing';
 
 interface ServiceSelectorProps {
@@ -20,7 +20,6 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
   validationErrors
 }) => {
   const [stagingCount, setStagingCount] = useState<number>(1);
-  const [bulkMode, setBulkMode] = useState<boolean>(false);
 
   const hasError = validationErrors.some(error => 
     error.toLowerCase().includes('service')
@@ -35,16 +34,7 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
     if (service.id === 'virtualStaging') {
       onServiceToggle(service, stagingCount);
     } else {
-      onServiceToggle(service, bulkMode ? 1 : undefined);
-    }
-  };
-
-  const handleQuantityChange = (service: Service, increment: boolean, e: React.MouseEvent) => {
-    e.stopPropagation();
-    const serviceData = selectedServices.get(service.name);
-    if (serviceData) {
-      const newCount = increment ? serviceData.count + 1 : Math.max(1, serviceData.count - 1);
-      onServiceToggle(service, newCount);
+      onServiceToggle(service);
     }
   };
 
@@ -65,30 +55,13 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center">
-          <h2 className={`text-base font-medium ${hasError ? 'text-red-600' : 'text-gray-800'}`}>
-            Select Your Services
-          </h2>
-          {hasError && (
-            <AlertCircle className="w-4 h-4 text-red-500 ml-2" />
-          )}
-        </div>
-        <div className="flex items-center gap-2">
-          <PackageOpen className={`w-4 h-4 ${bulkMode ? 'text-blue-600' : 'text-gray-500'}`} />
-          <label className="relative inline-flex items-center cursor-pointer">
-            <input
-              type="checkbox"
-              className="sr-only peer"
-              checked={bulkMode}
-              onChange={(e) => setBulkMode(e.target.checked)}
-            />
-            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-            <span className="ml-2 text-sm font-medium text-gray-600">
-              Bulk Booking
-            </span>
-          </label>
-        </div>
+      <div className="flex items-center mb-3">
+        <h2 className={`text-base font-medium ${hasError ? 'text-red-600' : 'text-gray-800'}`}>
+          Select Your Services
+        </h2>
+        {hasError && (
+          <AlertCircle className="w-4 h-4 text-red-500 ml-2" />
+        )}
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
         {services.map((service) => {
@@ -126,19 +99,13 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
                 ${price.toFixed(2)}
               </span>
               
-              {(service.id === 'virtualStaging' || (bulkMode && isSelected)) && (
+              {service.id === 'virtualStaging' && (
                 <div className={`absolute top-1 right-1 flex items-center gap-1 ${
                   isSelected ? 'text-white' : 'text-gray-600'
                 }`}>
                   <button
                     type="button"
-                    onClick={(e) => {
-                      if (service.id === 'virtualStaging') {
-                        handleStagingCountChange(false, e);
-                      } else {
-                        handleQuantityChange(service, false, e);
-                      }
-                    }}
+                    onClick={(e) => handleStagingCountChange(false, e)}
                     className={`p-1 rounded-full ${
                       isSelected 
                         ? 'hover:bg-blue-500'
@@ -147,18 +114,10 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
                   >
                     <Minus className="w-3 h-3" />
                   </button>
-                  <span className="text-xs font-medium min-w-[12px] text-center">
-                    {service.id === 'virtualStaging' ? stagingCount : serviceData?.count || 1}
-                  </span>
+                  <span className="text-xs font-medium min-w-[12px] text-center">{stagingCount}</span>
                   <button
                     type="button"
-                    onClick={(e) => {
-                      if (service.id === 'virtualStaging') {
-                        handleStagingCountChange(true, e);
-                      } else {
-                        handleQuantityChange(service, true, e);
-                      }
-                    }}
+                    onClick={(e) => handleStagingCountChange(true, e)}
                     className={`p-1 rounded-full ${
                       isSelected 
                         ? 'hover:bg-blue-500'
@@ -173,11 +132,6 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
           );
         })}
       </div>
-      {bulkMode && (
-        <p className="mt-2 text-sm text-gray-600">
-          Tip: Click on a service and use the + / - buttons to add multiple shoots
-        </p>
-      )}
     </div>
   );
 };
