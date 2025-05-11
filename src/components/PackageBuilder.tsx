@@ -38,24 +38,6 @@ const PackageBuilder: React.FC<PackageBuilderProps> = ({
   handleSubmit,
   handleReset
 }) => {
-  if (showSuccess) {
-    return (
-      <div className="w-full bg-white rounded-xl shadow-sm overflow-hidden min-h-[200px] flex items-center justify-center">
-        <div className="p-6 sm:p-8 flex flex-col items-center justify-center text-center">
-          <CheckCircle2 className="w-16 h-16 text-green-500 mb-4" />
-          <h2 className="text-2xl font-semibold text-primary mb-2">Booking Submitted Successfully!</h2>
-          <p className="text-gray-600 mb-6">Thank you for your booking request. We'll be in touch shortly.</p>
-          <button
-            onClick={handleReset}
-            className="px-6 py-3 bg-primary hover:bg-primary-light text-white rounded-lg transition-colors text-base"
-          >
-            Submit Another Booking
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="w-full bg-white rounded-xl shadow-sm overflow-hidden">
       <div className="p-6 sm:p-8 lg:p-10">
@@ -77,55 +59,69 @@ const PackageBuilder: React.FC<PackageBuilderProps> = ({
           </div>
         )}
 
-        <form 
-          id="bookingForm" 
-          onSubmit={handleSubmit} 
-          className="space-y-8"
-        >
-          <PropertySizeSelector 
-            selectedSize={selectedSize} 
-            onSizeSelect={handleSizeSelect}
-            validationErrors={validationErrors}
-          />
+        {!showSuccess ? (
+          <form 
+            id="bookingForm" 
+            onSubmit={handleSubmit} 
+            className="space-y-8"
+          >
+            <PropertySizeSelector 
+              selectedSize={selectedSize} 
+              onSizeSelect={handleSizeSelect}
+              validationErrors={validationErrors}
+            />
 
-          <ServiceSelector 
-            services={services} 
-            selectedServices={selectedServices} 
-            onServiceToggle={handleServiceToggle}
-            selectedSize={selectedSize}
-            validationErrors={validationErrors}
-          />
-          
-          <PackageSummary 
-            selectedServices={selectedServices} 
-            totalPrice={totalPrice} 
-            selectedSize={selectedSize}
-          />
+            <ServiceSelector 
+              services={services} 
+              selectedServices={selectedServices} 
+              onServiceToggle={handleServiceToggle}
+              selectedSize={selectedSize}
+              validationErrors={validationErrors}
+            />
+            
+            <PackageSummary 
+              selectedServices={selectedServices} 
+              totalPrice={totalPrice} 
+              selectedSize={selectedSize}
+            />
 
-          <OrderForm 
-            formData={formData}
-            onFormChange={handleFormChange}
-            onAddressChange={handleAddressChange}
-            validationErrors={validationErrors}
-          />
+            <OrderForm 
+              formData={formData}
+              onFormChange={handleFormChange}
+              onAddressChange={handleAddressChange}
+              validationErrors={validationErrors}
+            />
 
-          <div className="pt-6 border-t border-gray-100">
+            <div className="pt-6 border-t border-gray-100">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`
+                  w-full py-4 px-6 rounded-lg text-white font-medium text-lg
+                  transition-all duration-200
+                  ${!isSubmitting
+                    ? 'bg-primary hover:bg-primary-light'
+                    : 'bg-gray-300 cursor-not-allowed'
+                  }
+                `}
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit Booking'}
+              </button>
+            </div>
+          </form>
+        ) : (
+          <div className="py-20 flex flex-col items-center justify-center text-center">
+            <CheckCircle2 className="w-16 h-16 text-green-500 mb-4" />
+            <h2 className="text-2xl font-semibold text-primary mb-2">Booking Submitted Successfully!</h2>
+            <p className="text-gray-600 mb-6">Thank you for your booking request. We'll be in touch shortly.</p>
             <button
-              type="submit"
-              disabled={isSubmitting}
-              className={`
-                w-full py-4 px-6 rounded-lg text-white font-medium text-lg
-                transition-all duration-200
-                ${!isSubmitting
-                  ? 'bg-primary hover:bg-primary-light'
-                  : 'bg-gray-300 cursor-not-allowed'
-                }
-              `}
+              onClick={handleReset}
+              className="px-6 py-3 bg-primary hover:bg-primary-light text-white rounded-lg transition-colors text-base"
             >
-              {isSubmitting ? 'Submitting...' : 'Submit Booking'}
+              Submit Another Booking
             </button>
           </div>
-        </form>
+        )}
       </div>
     </div>
   );
