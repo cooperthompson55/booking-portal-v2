@@ -188,7 +188,10 @@ export const usePackageBuilder = () => {
         property_status: formData.occupancyStatus,
         status: 'pending',
         user_id: userData?.user?.id || null,
-        agent_info: formData.agent
+        agent_name: formData.agent.name,
+        agent_email: formData.agent.email,
+        agent_phone: formData.agent.phone,
+        agent_company: formData.agent.company || null
       };
 
       const { error } = await supabase
