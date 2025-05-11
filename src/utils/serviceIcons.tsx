@@ -1,5 +1,5 @@
 import React from 'react';
-import { Camera, Video, Film, Compass, Bone as Drone, LayoutPanelTop, Box as Box3d, Instagram, Globe, Link, Sunset, Sofa } from 'lucide-react';
+import { Camera, Video, Film, Compass, Plane, LayoutPanelTop, Box as Box3d, Instagram, Globe, Link, Sunset, Sofa } from 'lucide-react';
 
 type IconComponent = React.FC<{ className?: string }>;
 
@@ -12,7 +12,7 @@ export const getServiceIcon = (serviceId: string): IconComponent => {
     case 'virtualTour':
       return Compass;
     case 'droneAerialPhotos':
-      return Drone;
+      return Plane;
     case 'droneAerialVideoPhotos':
       return Video;
     case 'floorPlan':
