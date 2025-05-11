@@ -78,8 +78,8 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
                 group relative flex flex-col items-center justify-center p-3
                 rounded-md transition-all duration-200 ease-in-out cursor-pointer
                 ${isSelected 
-                  ? 'bg-accent text-white shadow-sm' 
-                  : 'bg-white text-gray-800 border border-gray-200 hover:border-accent hover:shadow-sm'
+                  ? 'bg-blue-600 text-white shadow-sm' 
+                  : 'bg-white text-gray-800 border border-gray-200 hover:border-blue-300 hover:shadow-sm'
                 }
               `}
             >
@@ -87,13 +87,13 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
                 <ServiceIcon className={`w-6 h-6 ${
                   isSelected 
                     ? 'text-white' 
-                    : 'text-accent group-hover:text-accent-dark'
+                    : 'text-blue-600 group-hover:text-blue-500'
                 }`} />
               </div>
               <span className="text-xs font-medium text-center mb-1">{service.name}</span>
               <span className={`text-xs ${
                 isSelected 
-                  ? 'text-white/90'
+                  ? 'text-blue-100'
                   : 'text-gray-500'
               }`}>
                 ${price.toFixed(2)}
@@ -108,7 +108,7 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
                     onClick={(e) => handleStagingCountChange(false, e)}
                     className={`p-1 rounded-full ${
                       isSelected 
-                        ? 'hover:bg-accent-dark'
+                        ? 'hover:bg-blue-500'
                         : 'hover:bg-gray-100'
                     }`}
                   >
@@ -120,7 +120,7 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
                     onClick={(e) => handleStagingCountChange(true, e)}
                     className={`p-1 rounded-full ${
                       isSelected 
-                        ? 'hover:bg-accent-dark'
+                        ? 'hover:bg-blue-500'
                         : 'hover:bg-gray-100'
                     }`}
                   >
