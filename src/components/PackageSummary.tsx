@@ -97,7 +97,7 @@ const PackageSummary: React.FC<PackageSummaryProps> = ({
               <div>
                 <h3 className="font-medium text-primary">Volume Discount</h3>
                 <p className="text-sm text-primary">
-                  {volumeDiscount.percentage}% off orders over ${volumeDiscount.threshold}
+                  Extra {volumeDiscount.percentage}% off
                 </p>
                 {nextDiscountTier && (
                   <p className="text-sm text-gray-600 mt-1">
@@ -115,10 +115,7 @@ const PackageSummary: React.FC<PackageSummaryProps> = ({
               <div>
                 <h3 className="font-medium text-primary">Bundle Savings</h3>
                 <p className="text-sm text-primary">
-                  Extra {bundleDiscount}% off with {applicableBundles[0].name}
-                </p>
-                <p className="text-sm text-gray-600 mt-1">
-                  {applicableBundles[0].description}
+                  Extra {bundleDiscount}% off
                 </p>
               </div>
             </div>
