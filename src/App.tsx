@@ -19,7 +19,7 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-50 p-3 sm:p-4">
       <PackageBuilder />
     </div>
   );

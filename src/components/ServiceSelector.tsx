@@ -55,15 +55,15 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
 
   return (
     <div>
-      <div className="flex items-center mb-4">
-        <h2 className={`text-lg md:text-xl font-medium ${hasError ? 'text-red-600' : 'text-gray-800'}`}>
+      <div className="flex items-center mb-3">
+        <h2 className={`text-base font-medium ${hasError ? 'text-red-600' : 'text-gray-800'}`}>
           Select Your Services
         </h2>
         {hasError && (
-          <AlertCircle className="w-5 h-5 text-red-500 ml-2" />
+          <AlertCircle className="w-4 h-4 text-red-500 ml-2" />
         )}
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
         {services.map((service) => {
           const serviceData = selectedServices.get(service.name);
           const isSelected = !!serviceData;
@@ -75,32 +75,32 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
               key={service.id}
               onClick={() => handleServiceClick(service)}
               className={`
-                group relative flex flex-col items-center justify-center p-4 h-[140px]
-                rounded-xl transition-all duration-200 ease-in-out cursor-pointer
+                group relative flex flex-col items-center justify-center p-3
+                rounded-md transition-all duration-200 ease-in-out cursor-pointer
                 ${isSelected 
-                  ? 'bg-blue-600 text-white shadow-lg transform scale-105' 
-                  : 'bg-white text-gray-800 border border-gray-200 hover:border-blue-300 hover:shadow-md'
+                  ? 'bg-emerald-600 text-white shadow-sm' 
+                  : 'bg-white text-gray-800 border border-gray-200 hover:border-emerald-300 hover:shadow-sm'
                 }
               `}
             >
               <div className="mb-2">
-                <ServiceIcon className={`w-8 h-8 ${
+                <ServiceIcon className={`w-6 h-6 ${
                   isSelected 
                     ? 'text-white' 
-                    : 'text-blue-600 group-hover:text-blue-500'
+                    : 'text-emerald-600 group-hover:text-emerald-500'
                 }`} />
               </div>
-              <span className="text-sm font-medium text-center">{service.name}</span>
-              <span className={`text-xs mt-1 ${
+              <span className="text-xs font-medium text-center mb-1">{service.name}</span>
+              <span className={`text-xs ${
                 isSelected 
-                  ? 'text-blue-100'
+                  ? 'text-emerald-100'
                   : 'text-gray-500'
               }`}>
                 ${price.toFixed(2)}
               </span>
               
               {service.id === 'virtualStaging' && (
-                <div className={`absolute top-2 right-2 flex items-center gap-1 ${
+                <div className={`absolute top-1 right-1 flex items-center gap-1 ${
                   isSelected ? 'text-white' : 'text-gray-600'
                 }`}>
                   <button
@@ -108,7 +108,7 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
                     onClick={(e) => handleStagingCountChange(false, e)}
                     className={`p-1 rounded-full ${
                       isSelected 
-                        ? 'hover:bg-blue-500'
+                        ? 'hover:bg-emerald-500'
                         : 'hover:bg-gray-100'
                     }`}
                   >
@@ -120,17 +120,13 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
                     onClick={(e) => handleStagingCountChange(true, e)}
                     className={`p-1 rounded-full ${
                       isSelected 
-                        ? 'hover:bg-blue-500'
+                        ? 'hover:bg-emerald-500'
                         : 'hover:bg-gray-100'
                     }`}
                   >
                     <Plus className="w-3 h-3" />
                   </button>
                 </div>
-              )}
-              
-              {isSelected && (
-                <div className="absolute top-2 right-2 w-2 h-2 bg-blue-300 rounded-full animate-pulse" />
               )}
             </div>
           );
