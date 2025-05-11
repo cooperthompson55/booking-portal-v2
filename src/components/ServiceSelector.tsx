@@ -43,18 +43,18 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
     e.preventDefault();
     e.stopPropagation();
 
-    const currentCount = stagingCounts.get(service.id) || 1;
-    const newCount = increment ? currentCount + 1 : Math.max(1, currentCount - 1);
-    
     setStagingCounts(prev => {
       const updated = new Map(prev);
+      const currentCount = prev.get(service.id) || 1;
+      const newCount = increment ? currentCount + 1 : Math.max(1, currentCount - 1);
       updated.set(service.id, newCount);
+      
+      if (selectedServices.has(service.name)) {
+        onServiceToggle(service, newCount);
+      }
+      
       return updated;
     });
-
-    if (selectedServices.has(service.name)) {
-      onServiceToggle(service, newCount);
-    }
   };
 
   return (

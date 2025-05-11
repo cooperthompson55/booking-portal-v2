@@ -39,6 +39,10 @@ export const usePackageBuilder = () => {
   const validateForm = (): boolean => {
     const errors: string[] = [];
 
+    if (!selectedSize) {
+      errors.push('Please select a property size');
+    }
+
     if (selectedServices.size === 0) {
       errors.push('Please select at least one service');
     }
@@ -104,8 +108,9 @@ export const usePackageBuilder = () => {
     setValidationErrors([]);
     setSelectedServices(prev => {
       const updated = new Map(prev);
+      const isSelected = updated.has(service.name);
       
-      if (updated.has(service.name)) {
+      if (isSelected) {
         if (service.id === 'virtualStaging') {
           updated.set(service.name, {
             price: selectedSize ? pricingData[selectedSize][service.id] : service.price,
