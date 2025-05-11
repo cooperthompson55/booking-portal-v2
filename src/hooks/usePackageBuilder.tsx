@@ -138,33 +138,23 @@ export const usePackageBuilder = () => {
     setIsSubmitting(true);
 
     try {
-      const servicesStr = Array.from(selectedServices.entries())
-        .map(([name, data]) => `${name} ($${data.price} x ${data.count})`)
-        .join(', ');
-
-      const fullAddress = [
-        formData.address.street,
-        formData.address.street2,
-        formData.address.city,
-        formData.address.state,
-        formData.address.zipCode
-      ].filter(Boolean).join(', ');
-
-      const formattedDate = new Date(formData.preferredDate).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
+      // Convert services to JSONB format
+      const servicesData = Array.from(selectedServices.entries()).map(([name, data]) => ({
+        name,
+        price: data.price,
+        count: data.count,
+        total: data.price * data.count
+      }));
 
       const { error } = await supabase.from('bookings').insert([{
-        timestamp: new Date().toISOString(),
         property_size: selectedSize || 'Not specified',
-        services: servicesStr,
+        services: servicesData,
         total_amount: totalPrice,
-        address: fullAddress,
-        notes: formData.propertyNotes || 'No additional notes',
-        preferred_date: formattedDate,
-        property_status: formData.occupancyStatus
+        address: formData.address,
+        notes: formData.propertyNotes || null,
+        preferred_date: formData.preferredDate,
+        property_status: formData.occupancyStatus,
+        status: 'pending'
       }]);
 
       if (error) {
