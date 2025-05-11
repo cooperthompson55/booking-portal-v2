@@ -87,6 +87,9 @@ const PackageSummary: React.FC<PackageSummaryProps> = ({
                 <p className="text-sm text-primary/80">
                   {volumeDiscount.percentage}% off your order
                 </p>
+                <p className="text-sm font-medium text-primary mt-1">
+                  You save ${volumeDiscountAmount.toFixed(2)}
+                </p>
               </div>
             </div>
           </div>
