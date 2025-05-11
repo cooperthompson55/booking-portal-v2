@@ -144,19 +144,23 @@ export const usePackageBuilder = () => {
         total: data.price * data.count
       }));
 
-      const { data, error } = await supabase
+      const { data: userData } = await supabase.auth.getUser();
+      
+      const bookingData = {
+        property_size: selectedSize,
+        services: servicesData,
+        total_amount: totalPrice,
+        address: formData.address,
+        notes: formData.propertyNotes || null,
+        preferred_date: formData.preferredDate,
+        property_status: formData.occupancyStatus,
+        status: 'pending',
+        user_id: userData?.user?.id || null
+      };
+
+      const { error } = await supabase
         .from('bookings')
-        .insert([{
-          property_size: selectedSize || 'Not specified',
-          services: servicesData,
-          total_amount: totalPrice,
-          address: formData.address,
-          notes: formData.propertyNotes || null,
-          preferred_date: formData.preferredDate,
-          property_status: formData.occupancyStatus,
-          status: 'pending'
-        }])
-        .select();
+        .insert([bookingData]);
 
       if (error) {
         throw error;
