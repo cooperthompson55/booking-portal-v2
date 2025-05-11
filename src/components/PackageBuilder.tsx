@@ -59,40 +59,40 @@ const PackageBuilder: React.FC<PackageBuilderProps> = ({
           </div>
         )}
 
-        {!showSuccess ? (
-          <form 
-            id="bookingForm" 
-            onSubmit={handleSubmit} 
-            className="space-y-8"
-          >
-            <PropertySizeSelector 
-              selectedSize={selectedSize} 
-              onSizeSelect={handleSizeSelect}
-              validationErrors={validationErrors}
-            />
+        <form 
+          id="bookingForm" 
+          onSubmit={handleSubmit} 
+          className="space-y-8"
+        >
+          <PropertySizeSelector 
+            selectedSize={selectedSize} 
+            onSizeSelect={handleSizeSelect}
+            validationErrors={validationErrors}
+          />
 
-            <ServiceSelector 
-              services={services} 
-              selectedServices={selectedServices} 
-              onServiceToggle={handleServiceToggle}
-              selectedSize={selectedSize}
-              validationErrors={validationErrors}
-            />
-            
-            <PackageSummary 
-              selectedServices={selectedServices} 
-              totalPrice={totalPrice} 
-              selectedSize={selectedSize}
-            />
+          <ServiceSelector 
+            services={services} 
+            selectedServices={selectedServices} 
+            onServiceToggle={handleServiceToggle}
+            selectedSize={selectedSize}
+            validationErrors={validationErrors}
+          />
+          
+          <PackageSummary 
+            selectedServices={selectedServices} 
+            totalPrice={totalPrice} 
+            selectedSize={selectedSize}
+          />
 
-            <OrderForm 
-              formData={formData}
-              onFormChange={handleFormChange}
-              onAddressChange={handleAddressChange}
-              validationErrors={validationErrors}
-            />
+          <OrderForm 
+            formData={formData}
+            onFormChange={handleFormChange}
+            onAddressChange={handleAddressChange}
+            validationErrors={validationErrors}
+          />
 
-            <div className="pt-6 border-t border-gray-100">
+          <div className="pt-6 border-t border-gray-100">
+            {!showSuccess ? (
               <button
                 type="submit"
                 disabled={isSubmitting}
@@ -107,21 +107,22 @@ const PackageBuilder: React.FC<PackageBuilderProps> = ({
               >
                 {isSubmitting ? 'Submitting...' : 'Submit Booking'}
               </button>
-            </div>
-          </form>
-        ) : (
-          <div className="py-20 flex flex-col items-center justify-center text-center">
-            <CheckCircle2 className="w-16 h-16 text-green-500 mb-4" />
-            <h2 className="text-2xl font-semibold text-primary mb-2">Booking Submitted Successfully!</h2>
-            <p className="text-gray-600 mb-6">Thank you for your booking request. We'll be in touch shortly.</p>
-            <button
-              onClick={handleReset}
-              className="px-6 py-3 bg-primary hover:bg-primary-light text-white rounded-lg transition-colors text-base"
-            >
-              Submit Another Booking
-            </button>
+            ) : (
+              <div className="py-8 flex flex-col items-center justify-center text-center">
+                <CheckCircle2 className="w-16 h-16 text-green-500 mb-4" />
+                <h2 className="text-2xl font-semibold text-primary mb-2">Booking Submitted Successfully!</h2>
+                <p className="text-gray-600 mb-6">Thank you for your booking request. We'll be in touch shortly.</p>
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="px-6 py-3 bg-primary hover:bg-primary-light text-white rounded-lg transition-colors text-base"
+                >
+                  Submit Another Booking
+                </button>
+              </div>
+            )}
           </div>
-        )}
+        </form>
       </div>
     </div>
   );
