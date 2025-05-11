@@ -167,6 +167,8 @@ export const usePackageBuilder = () => {
       }
 
       setShowSuccess(true);
+      // Scroll to top smoothly
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error('Submission error:', error);
       alert('There was an error submitting your booking. Please try again.');
