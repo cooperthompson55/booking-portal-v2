@@ -111,14 +111,7 @@ export const usePackageBuilder = () => {
       const isSelected = updated.has(service.name);
       
       if (isSelected) {
-        if (service.id === 'virtualStaging') {
-          updated.set(service.name, {
-            price: selectedSize ? pricingData[selectedSize][service.id] : service.price,
-            count
-          });
-        } else {
-          updated.delete(service.name);
-        }
+        updated.delete(service.name);
       } else {
         const price = selectedSize ? pricingData[selectedSize][service.id] : service.price;
         updated.set(service.name, { price, count });

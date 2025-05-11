@@ -19,7 +19,7 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
   selectedSize,
   validationErrors
 }) => {
-  const [stagingCounts, setStagingCounts] = useState<Map<string, number>>(new Map());
+  const [localCounts, setLocalCounts] = useState<Map<string, number>>(new Map());
 
   const hasError = validationErrors.some(error => 
     error.toLowerCase().includes('service')
@@ -31,24 +31,21 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
   };
 
   const handleServiceClick = (service: Service) => {
-    if (service.id === 'virtualStaging') {
-      const count = stagingCounts.get(service.id) || 1;
-      onServiceToggle(service, count);
-    } else {
-      onServiceToggle(service);
-    }
+    const currentCount = localCounts.get(service.id) || 1;
+    onServiceToggle(service, currentCount);
   };
 
   const handleCountChange = (service: Service, increment: boolean, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
-    setStagingCounts(prev => {
+    setLocalCounts(prev => {
       const updated = new Map(prev);
       const currentCount = prev.get(service.id) || 1;
       const newCount = increment ? currentCount + 1 : Math.max(1, currentCount - 1);
       updated.set(service.id, newCount);
       
+      // If service is selected, update the count
       if (selectedServices.has(service.name)) {
         onServiceToggle(service, newCount);
       }
@@ -73,7 +70,7 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
           const isSelected = !!serviceData;
           const ServiceIcon = getServiceIcon(service.id);
           const price = getServicePrice(service);
-          const count = serviceData?.count || stagingCounts.get(service.id) || 1;
+          const count = serviceData?.count || localCounts.get(service.id) || 1;
           
           return (
             <div
