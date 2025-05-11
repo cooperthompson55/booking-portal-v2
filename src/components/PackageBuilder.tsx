@@ -77,48 +77,56 @@ const PackageBuilder: React.FC<PackageBuilderProps> = ({
           </div>
         )}
 
-        <form id="bookingForm" onSubmit={handleSubmit} className="space-y-10">
-          <PropertySizeSelector 
-            selectedSize={selectedSize} 
-            onSizeSelect={handleSizeSelect}
-            validationErrors={validationErrors}
-          />
+        <form 
+          id="bookingForm" 
+          onSubmit={handleSubmit} 
+          className="flex flex-col min-h-[calc(100vh-16rem)]"
+        >
+          <div className="flex-grow space-y-10">
+            <PropertySizeSelector 
+              selectedSize={selectedSize} 
+              onSizeSelect={handleSizeSelect}
+              validationErrors={validationErrors}
+            />
 
-          <ServiceSelector 
-            services={services} 
-            selectedServices={selectedServices} 
-            onServiceToggle={handleServiceToggle}
-            selectedSize={selectedSize}
-            validationErrors={validationErrors}
-          />
-          
-          <PackageSummary 
-            selectedServices={selectedServices} 
-            totalPrice={totalPrice} 
-            selectedSize={selectedSize}
-          />
+            <ServiceSelector 
+              services={services} 
+              selectedServices={selectedServices} 
+              onServiceToggle={handleServiceToggle}
+              selectedSize={selectedSize}
+              validationErrors={validationErrors}
+            />
+            
+            <PackageSummary 
+              selectedServices={selectedServices} 
+              totalPrice={totalPrice} 
+              selectedSize={selectedSize}
+            />
 
-          <OrderForm 
-            formData={formData}
-            onFormChange={handleFormChange}
-            onAddressChange={handleAddressChange}
-            validationErrors={validationErrors}
-          />
+            <OrderForm 
+              formData={formData}
+              onFormChange={handleFormChange}
+              onAddressChange={handleAddressChange}
+              validationErrors={validationErrors}
+            />
+          </div>
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className={`
-              w-full py-4 px-6 rounded-lg text-white font-medium text-lg
-              transition-all duration-200
-              ${!isSubmitting
-                ? 'bg-primary hover:bg-primary-light'
-                : 'bg-gray-300 cursor-not-allowed'
-              }
-            `}
-          >
-            {isSubmitting ? 'Submitting...' : 'Submit Booking'}
-          </button>
+          <div className="mt-10 pt-6 border-t border-gray-100">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className={`
+                w-full py-4 px-6 rounded-lg text-white font-medium text-lg
+                transition-all duration-200
+                ${!isSubmitting
+                  ? 'bg-primary hover:bg-primary-light'
+                  : 'bg-gray-300 cursor-not-allowed'
+                }
+              `}
+            >
+              {isSubmitting ? 'Submitting...' : 'Submit Booking'}
+            </button>
+          </div>
         </form>
       </div>
     </div>
