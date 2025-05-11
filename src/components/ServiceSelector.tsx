@@ -19,7 +19,7 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
   selectedSize,
   validationErrors
 }) => {
-  const [stagingCount, setStagingCount] = useState<number>(1);
+  const [stagingCounts, setStagingCounts] = useState<Map<string, number>>(new Map());
 
   const hasError = validationErrors.some(error => 
     error.toLowerCase().includes('service')
@@ -32,21 +32,26 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
 
   const handleServiceClick = (service: Service) => {
     if (service.id === 'virtualStaging') {
-      if (!selectedServices.has(service.name)) {
-        onServiceToggle(service, stagingCount);
-      }
+      const count = stagingCounts.get(service.id) || 1;
+      onServiceToggle(service, count);
     } else {
       onServiceToggle(service);
     }
   };
 
-  const handleStagingCountChange = (increment: boolean, service: Service, e: React.MouseEvent) => {
+  const handleCountChange = (service: Service, increment: boolean, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+
+    const currentCount = stagingCounts.get(service.id) || 1;
+    const newCount = increment ? currentCount + 1 : Math.max(1, currentCount - 1);
     
-    const newCount = increment ? stagingCount + 1 : Math.max(1, stagingCount - 1);
-    setStagingCount(newCount);
-    
+    setStagingCounts(prev => {
+      const updated = new Map(prev);
+      updated.set(service.id, newCount);
+      return updated;
+    });
+
     if (selectedServices.has(service.name)) {
       onServiceToggle(service, newCount);
     }
@@ -68,6 +73,7 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
           const isSelected = !!serviceData;
           const ServiceIcon = getServiceIcon(service.id);
           const price = getServicePrice(service);
+          const count = serviceData?.count || stagingCounts.get(service.id) || 1;
           
           return (
             <div
@@ -104,7 +110,7 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
                 }`}>
                   <button
                     type="button"
-                    onClick={(e) => handleStagingCountChange(false, service, e)}
+                    onClick={(e) => handleCountChange(service, false, e)}
                     className={`p-1 rounded-full ${
                       isSelected 
                         ? 'hover:bg-blue-500'
@@ -114,11 +120,11 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
                     <Minus className="w-3 h-3" />
                   </button>
                   <span className="text-xs font-medium min-w-[12px] text-center">
-                    {serviceData?.count || stagingCount}
+                    {count}
                   </span>
                   <button
                     type="button"
-                    onClick={(e) => handleStagingCountChange(true, service, e)}
+                    onClick={(e) => handleCountChange(service, true, e)}
                     className={`p-1 rounded-full ${
                       isSelected 
                         ? 'hover:bg-blue-500'

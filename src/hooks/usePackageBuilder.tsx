@@ -63,7 +63,6 @@ export const usePackageBuilder = () => {
       errors.push('Please select a preferred date');
     }
 
-    // Validate agent information
     if (!formData.agent.name) {
       errors.push('Please enter your name');
     }
@@ -107,13 +106,17 @@ export const usePackageBuilder = () => {
       const updated = new Map(prev);
       
       if (updated.has(service.name)) {
-        updated.delete(service.name);
+        if (service.id === 'virtualStaging') {
+          updated.set(service.name, {
+            price: selectedSize ? pricingData[selectedSize][service.id] : service.price,
+            count
+          });
+        } else {
+          updated.delete(service.name);
+        }
       } else {
         const price = selectedSize ? pricingData[selectedSize][service.id] : service.price;
-        updated.set(service.name, {
-          price,
-          count
-        });
+        updated.set(service.name, { price, count });
       }
       
       return updated;
@@ -203,7 +206,6 @@ export const usePackageBuilder = () => {
       }
 
       setShowSuccess(true);
-      // Scroll to top smoothly
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error('Submission error:', error);
