@@ -114,9 +114,11 @@ const PackageSummary: React.FC<PackageSummaryProps> = ({
               <Package className="w-5 h-5 text-primary mt-1" />
               <div>
                 <h3 className="font-medium text-primary">Bundle Savings</h3>
-                <p className="text-sm text-primary">
-                  Extra {bundleDiscount}% off
-                </p>
+                {applicableBundles.map((bundle, index) => (
+                  <p key={bundle.id} className="text-sm text-primary">
+                    {bundle.name}: Extra {bundle.bonusDiscount}% off
+                  </p>
+                ))}
               </div>
             </div>
           )}
