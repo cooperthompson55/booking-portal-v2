@@ -29,6 +29,12 @@ export const usePackageBuilder = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
+  // Get current price for a service based on selected size
+  const getServicePrice = useCallback((serviceId: string): number => {
+    if (!selectedSize) return 0;
+    return pricingData[selectedSize][serviceId] || 0;
+  }, [selectedSize]);
+
   const validateForm = (): boolean => {
     const errors: string[] = [];
 
@@ -68,7 +74,7 @@ export const usePackageBuilder = () => {
     setSelectedSize(size);
     setValidationErrors([]);
     
-    // Update prices for all currently selected services based on new size
+    // Update all service prices when size changes
     setSelectedServices(prev => {
       const updated = new Map<string, ServiceCount>();
       prev.forEach((serviceData, serviceName) => {
@@ -94,8 +100,9 @@ export const usePackageBuilder = () => {
       if (updated.has(service.name)) {
         updated.delete(service.name);
       } else {
+        const currentPrice = pricingData[selectedSize][service.id];
         updated.set(service.name, {
-          price: pricingData[selectedSize][service.id],
+          price: currentPrice,
           count
         });
       }
@@ -223,6 +230,7 @@ export const usePackageBuilder = () => {
     handleFormChange,
     handleAddressChange,
     handleSubmit,
-    handleReset
+    handleReset,
+    getServicePrice
   };
 };

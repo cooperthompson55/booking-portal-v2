@@ -25,6 +25,10 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
   );
 
   const handleServiceClick = (service: Service) => {
+    if (!selectedSize) {
+      return; // Prevent selecting services without a size
+    }
+    
     if (service.id === 'virtualStaging') {
       onServiceToggle(service, stagingCount);
     } else {
@@ -71,51 +75,61 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
               className={`
                 group relative flex flex-col items-center justify-center p-4 h-[140px]
                 rounded-xl transition-all duration-200 ease-in-out cursor-pointer
-                ${isSelected 
-                  ? 'bg-blue-600 text-white shadow-lg transform scale-105' 
-                  : hasError
-                    ? 'bg-red-50 text-red-700 border-2 border-red-300 hover:bg-red-100'
-                    : 'bg-white text-gray-800 border border-gray-200 hover:border-blue-300 hover:shadow-md'
+                ${!selectedSize
+                  ? 'opacity-50 cursor-not-allowed'
+                  : isSelected 
+                    ? 'bg-blue-600 text-white shadow-lg transform scale-105' 
+                    : hasError
+                      ? 'bg-red-50 text-red-700 border-2 border-red-300 hover:bg-red-100'
+                      : 'bg-white text-gray-800 border border-gray-200 hover:border-blue-300 hover:shadow-md'
                 }
               `}
             >
               <div className="mb-2">
                 <ServiceIcon className={`w-8 h-8 ${
-                  isSelected 
-                    ? 'text-white' 
-                    : hasError 
-                      ? 'text-red-500' 
-                      : 'text-blue-600 group-hover:text-blue-500'
+                  !selectedSize
+                    ? 'text-gray-400'
+                    : isSelected 
+                      ? 'text-white' 
+                      : hasError 
+                        ? 'text-red-500' 
+                        : 'text-blue-600 group-hover:text-blue-500'
                 }`} />
               </div>
               <span className="text-sm font-medium text-center">{service.name}</span>
               <span className={`text-xs mt-1 ${
-                isSelected 
-                  ? 'text-blue-100' 
-                  : hasError 
-                    ? 'text-red-400' 
-                    : 'text-gray-500'
+                !selectedSize
+                  ? 'text-gray-400'
+                  : isSelected 
+                    ? 'text-blue-100' 
+                    : hasError 
+                      ? 'text-red-400' 
+                      : 'text-gray-500'
               }`}>
                 ${price.toFixed(2)}
               </span>
               
               {service.id === 'virtualStaging' && (
                 <div className={`absolute top-2 right-2 flex items-center gap-1 ${
-                  isSelected 
-                    ? 'text-white' 
-                    : hasError 
-                      ? 'text-red-500' 
-                      : 'text-gray-600'
+                  !selectedSize
+                    ? 'text-gray-400'
+                    : isSelected 
+                      ? 'text-white' 
+                      : hasError 
+                        ? 'text-red-500' 
+                        : 'text-gray-600'
                 }`}>
                   <button
                     type="button"
                     onClick={(e) => handleStagingCountChange(false, e)}
                     className={`p-1 rounded-full ${
-                      isSelected 
-                        ? 'hover:bg-blue-500' 
-                        : hasError 
-                          ? 'hover:bg-red-200' 
-                          : 'hover:bg-gray-100'
+                      !selectedSize
+                        ? 'cursor-not-allowed'
+                        : isSelected 
+                          ? 'hover:bg-blue-500' 
+                          : hasError 
+                            ? 'hover:bg-red-200' 
+                            : 'hover:bg-gray-100'
                     }`}
                   >
                     <Minus className="w-3 h-3" />
@@ -125,11 +139,13 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
                     type="button"
                     onClick={(e) => handleStagingCountChange(true, e)}
                     className={`p-1 rounded-full ${
-                      isSelected 
-                        ? 'hover:bg-blue-500' 
-                        : hasError 
-                          ? 'hover:bg-red-200' 
-                          : 'hover:bg-gray-100'
+                      !selectedSize
+                        ? 'cursor-not-allowed'
+                        : isSelected 
+                          ? 'hover:bg-blue-500' 
+                          : hasError 
+                            ? 'hover:bg-red-200' 
+                            : 'hover:bg-gray-100'
                     }`}
                   >
                     <Plus className="w-3 h-3" />
