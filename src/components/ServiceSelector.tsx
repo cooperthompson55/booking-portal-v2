@@ -41,7 +41,9 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
   };
 
   const handleStagingCountChange = (increment: boolean, service: Service, e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
+    
     const newCount = increment ? stagingCount + 1 : Math.max(1, stagingCount - 1);
     setStagingCount(newCount);
     
