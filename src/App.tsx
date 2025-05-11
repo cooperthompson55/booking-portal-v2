@@ -24,8 +24,8 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 p-3 sm:p-6">
-      <div className="container mx-auto">
+    <div className="min-h-screen bg-slate-50 p-4 sm:p-8 lg:p-12">
+      <div className="container mx-auto max-w-4xl lg:max-w-5xl">
         {showFullForm ? (
           <PackageBuilder {...packageBuilderState} />
         ) : (
