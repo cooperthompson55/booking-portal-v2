@@ -80,38 +80,36 @@ const PackageBuilder: React.FC<PackageBuilderProps> = ({
         <form 
           id="bookingForm" 
           onSubmit={handleSubmit} 
-          className="flex flex-col min-h-[calc(100vh-16rem)]"
+          className="space-y-8"
         >
-          <div className="flex-grow space-y-10">
-            <PropertySizeSelector 
-              selectedSize={selectedSize} 
-              onSizeSelect={handleSizeSelect}
-              validationErrors={validationErrors}
-            />
+          <PropertySizeSelector 
+            selectedSize={selectedSize} 
+            onSizeSelect={handleSizeSelect}
+            validationErrors={validationErrors}
+          />
 
-            <ServiceSelector 
-              services={services} 
-              selectedServices={selectedServices} 
-              onServiceToggle={handleServiceToggle}
-              selectedSize={selectedSize}
-              validationErrors={validationErrors}
-            />
-            
-            <PackageSummary 
-              selectedServices={selectedServices} 
-              totalPrice={totalPrice} 
-              selectedSize={selectedSize}
-            />
+          <ServiceSelector 
+            services={services} 
+            selectedServices={selectedServices} 
+            onServiceToggle={handleServiceToggle}
+            selectedSize={selectedSize}
+            validationErrors={validationErrors}
+          />
+          
+          <PackageSummary 
+            selectedServices={selectedServices} 
+            totalPrice={totalPrice} 
+            selectedSize={selectedSize}
+          />
 
-            <OrderForm 
-              formData={formData}
-              onFormChange={handleFormChange}
-              onAddressChange={handleAddressChange}
-              validationErrors={validationErrors}
-            />
-          </div>
+          <OrderForm 
+            formData={formData}
+            onFormChange={handleFormChange}
+            onAddressChange={handleAddressChange}
+            validationErrors={validationErrors}
+          />
 
-          <div className="mt-10 pt-6 border-t border-gray-100">
+          <div className="pt-6 border-t border-gray-100">
             <button
               type="submit"
               disabled={isSubmitting}
