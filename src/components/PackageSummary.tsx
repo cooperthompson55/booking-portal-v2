@@ -1,9 +1,7 @@
 import React from 'react';
-import { Check, Gift, Package } from 'lucide-react';
+import { Gift } from 'lucide-react';
 import { PropertySize } from '../types';
 import { discountTiers, getDiscount } from '../data/discounts';
-import { findApplicableBundles, calculateBundleDiscount } from '../data/bundles';
-import { services } from '../data/services';
 
 interface PackageSummaryProps {
   selectedServices: Map<string, { price: number; count: number }>;
@@ -23,19 +21,8 @@ const PackageSummary: React.FC<PackageSummaryProps> = ({
   const volumeDiscount = getDiscount(subtotal);
   const volumeDiscountAmount = volumeDiscount ? (subtotal * volumeDiscount.percentage) / 100 : 0;
   
-  // Calculate bundle discount
-  const selectedServiceIds = Array.from(selectedServices.keys()).map(name => {
-    const service = services.find(s => s.name === name);
-    return service ? service.id : '';
-  }).filter(Boolean);
-  
-  const applicableBundles = findApplicableBundles(selectedServiceIds);
-  const bundleDiscount = calculateBundleDiscount(applicableBundles);
-  const bundleDiscountAmount = (subtotal * bundleDiscount) / 100;
-  
-  // Calculate total discount and final price
-  const totalDiscountAmount = volumeDiscountAmount + bundleDiscountAmount;
-  const finalTotal = subtotal - totalDiscountAmount;
+  // Calculate final price
+  const finalTotal = subtotal - volumeDiscountAmount;
   
   const formatSize = (size: PropertySize | null): string => {
     if (!size) return 'Not selected';
@@ -62,7 +49,7 @@ const PackageSummary: React.FC<PackageSummaryProps> = ({
       {selectedSize && (
         <div className="flex items-center mb-4 bg-gray-50 p-3 rounded-lg">
           <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mr-3">
-            <Check className="w-4 h-4 text-primary" />
+            <Gift className="w-4 h-4 text-primary" />
           </div>
           <div>
             <p className="text-sm text-gray-500">Property Size</p>
@@ -87,70 +74,57 @@ const PackageSummary: React.FC<PackageSummaryProps> = ({
         </div>
       )}
 
-      {/* Discounts Section */}
-      {hasServices && (applicableBundles.length > 0 || volumeDiscount) && (
-        <div className="mb-6 p-4 bg-primary/5 rounded-lg space-y-4">
-          {/* Volume Discount */}
-          {volumeDiscount && (
-            <div className="flex items-start gap-2">
-              <Gift className="w-5 h-5 text-primary mt-1" />
+      {/* Volume Discount Section */}
+      {hasServices && volumeDiscount && (
+        <div className="mb-6 bg-primary/5 rounded-lg overflow-hidden">
+          <div className="p-4 border-b border-primary/10">
+            <div className="flex items-center gap-3">
+              <div className="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                <Gift className="w-5 h-5 text-primary" />
+              </div>
               <div>
-                <h3 className="font-medium text-primary">Volume Discount</h3>
-                <p className="text-sm text-primary">
-                  Extra {volumeDiscount.percentage}% off
+                <h3 className="font-semibold text-primary">Volume Discount Applied!</h3>
+                <p className="text-sm text-primary/80">
+                  You're saving ${volumeDiscountAmount.toFixed(2)} ({volumeDiscount.percentage}% off)
                 </p>
-                {nextDiscountTier && (
-                  <p className="text-sm text-gray-600 mt-1">
-                    Add ${(nextDiscountTier.threshold - subtotal).toFixed(2)} more for {nextDiscountTier.percentage}% off
-                  </p>
-                )}
               </div>
             </div>
-          )}
-
-          {/* Bundle Discount */}
-          {applicableBundles.length > 0 && (
-            <div className="flex items-start gap-2">
-              <Package className="w-5 h-5 text-primary mt-1" />
-              <div>
-                <h3 className="font-medium text-primary">Bundle Savings</h3>
-                {applicableBundles.map((bundle, index) => (
-                  <p key={bundle.id} className="text-sm text-primary">
-                    {bundle.name}: Extra {bundle.bonusDiscount}% off
-                  </p>
-                ))}
-              </div>
+          </div>
+          
+          {nextDiscountTier && (
+            <div className="p-4 bg-primary/10">
+              <p className="text-sm font-medium text-primary">
+                🎉 Add ${(nextDiscountTier.threshold - subtotal).toFixed(2)} more to save {nextDiscountTier.percentage}%
+              </p>
             </div>
           )}
         </div>
       )}
       
       {/* Price Summary */}
-      <div className="space-y-2">
+      <div className="space-y-3">
         <div className="flex justify-between items-center text-gray-600">
           <span>Subtotal</span>
           <span>${subtotal.toFixed(2)}</span>
         </div>
         
         {volumeDiscountAmount > 0 && (
-          <div className="flex justify-between items-center text-primary">
-            <span>Volume Discount ({volumeDiscount?.percentage}% off)</span>
+          <div className="flex justify-between items-center text-primary font-medium">
+            <span>Volume Discount</span>
             <span>-${volumeDiscountAmount.toFixed(2)}</span>
           </div>
         )}
-
-        {bundleDiscountAmount > 0 && (
-          <div className="flex justify-between items-center text-primary">
-            <span>Bundle Discount ({bundleDiscount}% off)</span>
-            <span>-${bundleDiscountAmount.toFixed(2)}</span>
-          </div>
-        )}
         
-        <div className="flex justify-between items-center border-t border-gray-100 pt-2 text-lg font-semibold">
+        <div className="flex justify-between items-center border-t border-gray-100 pt-3 text-xl font-bold">
           <span className="text-primary">Total</span>
-          <span className="text-primary">
-            ${finalTotal.toFixed(2)}
-          </span>
+          <div className="text-right">
+            <span className="text-primary">${finalTotal.toFixed(2)}</span>
+            {volumeDiscountAmount > 0 && (
+              <div className="text-sm font-medium text-green-500">
+                You save ${volumeDiscountAmount.toFixed(2)}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
