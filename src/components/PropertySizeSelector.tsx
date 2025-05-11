@@ -41,7 +41,7 @@ const PropertySizeSelector: React.FC<PropertySizeSelectorProps> = ({
       <div className="flex items-center mb-3">
         <Home className={`w-5 h-5 ${hasError ? 'text-red-500' : 'text-blue-600'} mr-2`} />
         <h2 className={`text-lg md:text-xl font-medium ${hasError ? 'text-red-600' : 'text-gray-800'}`}>
-          Select Property Size (Optional)
+          Select Property Size
         </h2>
         {hasError && (
           <AlertCircle className="w-5 h-5 text-red-500 ml-2" />
