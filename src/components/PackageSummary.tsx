@@ -1,6 +1,7 @@
 import React from 'react';
-import { Check } from 'lucide-react';
+import { Check, Gift } from 'lucide-react';
 import { PropertySize } from '../types';
+import { discountTiers, getDiscount } from '../data/discounts';
 
 interface PackageSummaryProps {
   selectedServices: Map<string, { price: number; count: number }>;
@@ -14,6 +15,10 @@ const PackageSummary: React.FC<PackageSummaryProps> = ({
   selectedSize
 }) => {
   const hasServices = selectedServices.size > 0;
+  const subtotal = totalPrice;
+  const appliedDiscount = getDiscount(subtotal);
+  const discountAmount = appliedDiscount ? (subtotal * appliedDiscount.percentage) / 100 : 0;
+  const finalTotal = subtotal - discountAmount;
   
   const formatSize = (size: PropertySize | null): string => {
     if (!size) return 'Not selected';
@@ -28,9 +33,12 @@ const PackageSummary: React.FC<PackageSummaryProps> = ({
     }
   };
 
+  // Find next discount tier
+  const nextDiscountTier = discountTiers.find(tier => subtotal < tier.threshold);
+
   return (
     <div className="mt-8 border-t border-gray-100 pt-6">
-      <h2 className="text-lg md:text-xl font-medium text-gray-800 mb-4">
+      <h2 className="text-lg font-medium text-gray-800 mb-4">
         Your Package
       </h2>
       
@@ -61,12 +69,58 @@ const PackageSummary: React.FC<PackageSummaryProps> = ({
           </ul>
         </div>
       )}
+
+      {/* Discount Tiers */}
+      <div className="mb-6 p-4 bg-primary/5 rounded-lg">
+        <div className="flex items-center gap-2 mb-3">
+          <Gift className="w-5 h-5 text-primary" />
+          <h3 className="font-medium text-primary">Volume Discounts</h3>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {discountTiers.map((tier) => (
+            <div
+              key={tier.threshold}
+              className={`p-2 rounded-md text-center ${
+                appliedDiscount?.threshold === tier.threshold
+                  ? 'bg-primary text-white'
+                  : subtotal >= tier.threshold
+                  ? 'bg-primary/10 text-primary'
+                  : 'bg-gray-50 text-gray-500'
+              }`}
+            >
+              <div className="text-xs mb-1">Orders over</div>
+              <div className="font-semibold">${tier.threshold}</div>
+              <div className="text-xs">{tier.percentage}% off</div>
+            </div>
+          ))}
+        </div>
+        
+        {nextDiscountTier && (
+          <div className="mt-3 text-sm text-primary">
+            Add ${(nextDiscountTier.threshold - subtotal).toFixed(2)} more to get {nextDiscountTier.percentage}% off!
+          </div>
+        )}
+      </div>
       
-      <div className="flex justify-between items-center border-t border-gray-100 pt-4 mb-6">
-        <span className="text-lg font-semibold">Total</span>
-        <span className="text-xl font-bold text-blue-600">
-          ${totalPrice.toFixed(2)}
-        </span>
+      <div className="space-y-2">
+        <div className="flex justify-between items-center text-gray-600">
+          <span>Subtotal</span>
+          <span>${subtotal.toFixed(2)}</span>
+        </div>
+        
+        {appliedDiscount && (
+          <div className="flex justify-between items-center text-primary">
+            <span>Discount ({appliedDiscount.percentage}% off)</span>
+            <span>-${discountAmount.toFixed(2)}</span>
+          </div>
+        )}
+        
+        <div className="flex justify-between items-center border-t border-gray-100 pt-2 text-lg font-semibold">
+          <span className="text-primary">Total</span>
+          <span className="text-primary">
+            ${finalTotal.toFixed(2)}
+          </span>
+        </div>
       </div>
     </div>
   );
