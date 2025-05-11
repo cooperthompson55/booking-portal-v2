@@ -39,14 +39,12 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
     }
   };
 
-  const handleQuantityChange = (serviceName: string, increment: boolean) => {
-    const serviceData = selectedServices.get(serviceName);
+  const handleQuantityChange = (service: Service, increment: boolean, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const serviceData = selectedServices.get(service.name);
     if (serviceData) {
-      const service = services.find(s => s.name === serviceName);
-      if (service) {
-        const newCount = increment ? serviceData.count + 1 : Math.max(1, serviceData.count - 1);
-        onServiceToggle(service, newCount);
-      }
+      const newCount = increment ? serviceData.count + 1 : Math.max(1, serviceData.count - 1);
+      onServiceToggle(service, newCount);
     }
   };
 
@@ -135,11 +133,10 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
                   <button
                     type="button"
                     onClick={(e) => {
-                      e.stopPropagation();
                       if (service.id === 'virtualStaging') {
                         handleStagingCountChange(false, e);
                       } else {
-                        handleQuantityChange(service.name, false);
+                        handleQuantityChange(service, false, e);
                       }
                     }}
                     className={`p-1 rounded-full ${
@@ -156,11 +153,10 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({
                   <button
                     type="button"
                     onClick={(e) => {
-                      e.stopPropagation();
                       if (service.id === 'virtualStaging') {
                         handleStagingCountChange(true, e);
                       } else {
-                        handleQuantityChange(service.name, true);
+                        handleQuantityChange(service, true, e);
                       }
                     }}
                     className={`p-1 rounded-full ${
