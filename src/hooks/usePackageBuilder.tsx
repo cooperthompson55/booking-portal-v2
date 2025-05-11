@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { Service, PropertySize, OrderFormData } from '../types';
 import { pricingData } from '../data/pricing';
 import { services } from '../data/services';
+import { supabase } from '../lib/supabase';
 
 const initialFormData: OrderFormData = {
   address: {
@@ -155,36 +156,22 @@ export const usePackageBuilder = () => {
         day: 'numeric'
       });
 
-      const payload = {
+      const { error } = await supabase.from('bookings').insert([{
         timestamp: new Date().toISOString(),
-        propertySize: selectedSize || 'Not specified',
+        property_size: selectedSize || 'Not specified',
         services: servicesStr,
-        totalAmount: totalPrice.toFixed(2),
+        total_amount: totalPrice,
         address: fullAddress,
         notes: formData.propertyNotes || 'No additional notes',
-        preferredDate: formattedDate,
-        propertyStatus: formData.occupancyStatus
-      };
+        preferred_date: formattedDate,
+        property_status: formData.occupancyStatus
+      }]);
 
-      const formData = new URLSearchParams();
-      Object.entries(payload).forEach(([key, value]) => {
-        formData.append(key, value as string);
-      });
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error('Failed to submit booking');
+      }
 
-      await fetch(
-        "https://script.google.com/macros/s/AKfycbwDSmFp7yzOlnyJuohNyssQnTQJm8gDWNC6gIrAbUqM3gSM4i3T1jqsexFbHnjGUgC_1Q/exec",
-        {
-          method: "POST",
-          mode: "no-cors",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: formData.toString(),
-        }
-      );
-
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
       setShowSuccess(true);
     } catch (error) {
       console.error('Submission error:', error);
