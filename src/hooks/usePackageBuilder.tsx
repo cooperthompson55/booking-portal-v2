@@ -202,15 +202,15 @@ export const usePackageBuilder = () => {
       if (error) {
         throw error;
       }
-    // ✅ Send email using Resend Edge Function
-    await fetch("https://jshnsfvvsmjlxlbdpehf.functions.supabase.co/sendBookingEmail.functions.supabase.co/sendBookingEmail", {
+
+      // Send email using Resend Edge Function
+      await fetch("https://jshnsfvvsmjlxlbdpehf.supabase.co/functions/v1/sendBookingEmail", {
         method: "POST",
-    headers: {
-    "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ record: bookingData }),
-});
-      
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ record: bookingData }),
+      });
 
       setShowSuccess(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
