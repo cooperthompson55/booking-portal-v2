@@ -203,11 +203,13 @@ export const usePackageBuilder = () => {
         throw error;
       }
 
-      // Send email using Resend Edge Function
-      await fetch("https://jshnsfvvsmjlxlbdpehf.supabase.co/functions/v1/sendBookingEmail", {
+      // Send email using Resend Edge Function with proper authorization
+      const { data: { session } } = await supabase.auth.getSession();
+      await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sendBookingEmail`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
         },
         body: JSON.stringify({ record: bookingData }),
       });
