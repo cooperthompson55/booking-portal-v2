@@ -203,7 +203,8 @@ export const usePackageBuilder = () => {
         throw error;
       }
     // ✅ Send email using Resend Edge Function
-    await fetch("https://<your-project-id>.functions.supabase.co/sendBookingEmail", {
+    await fetch("https://jshnsfvvsmjlxlbdpehf.functions.supabase.co/sendBookingEmail
+.functions.supabase.co/sendBookingEmail", {
         method: "POST",
     headers: {
     "Content-Type": "application/json",
